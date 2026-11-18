@@ -1,0 +1,25 @@
+{
+  "name": "gs1-italy-web-vocabulary-tool",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "vocab": "node scripts/build-vocab.mjs"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.6",
+    "@types/jsonld": "^1.5.15",
+    "@types/node": "^24.19.2",
+    "jsonld": "^9.0.0",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.8",
+    "vitest": "^3.2.7"
+  },
+  "dependencies": {
+    "preact": "^10.29.8"
+  }
+}
