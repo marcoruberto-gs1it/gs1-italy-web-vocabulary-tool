@@ -3,6 +3,7 @@ import { useForm, product } from '../form'
 import { t, tk } from '../i18n'
 import { EU_ALLERGENS } from '../mapping'
 import type { Containment, NutrientKey } from '../model/state'
+import { Example } from '../components/Field'
 import { Mark } from '../plates/marks'
 import { LangField } from './Product'
 
@@ -30,6 +31,7 @@ function Allergens() {
         {t('field.allergens')}
       </legend>
       <p class="hint">{t('allergen.regulation')}</p>
+      <Example id="allergens" />
       <div class="table-wrap">
         <table class="grid allergens">
           <thead>
@@ -94,6 +96,7 @@ function Nutrition() {
         <Mark id="nutrition" />
         {t('field.nutrition')}
       </legend>
+      <Example id="nutrition" />
       <div class="segmented" role="radiogroup" aria-label={t('nutrition.basis')}>
         <span class="segmented-label">{t('nutrition.basis')}</span>
         {(['GRM', 'MLT'] as const).map((b) => (

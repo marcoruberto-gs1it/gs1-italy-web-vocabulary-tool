@@ -1,5 +1,5 @@
 /** Passo del tessile: materiali ripetibili con percentuale, colore, taglia. */
-import { Field } from '../components/Field'
+import { Example, Field } from '../components/Field'
 import { TextInput } from '../components/inputs'
 import { product, useForm } from '../form'
 import { t } from '../i18n'
@@ -24,6 +24,7 @@ export function Wearable() {
           {t('field.materials')}
         </legend>
         <p class="hint">{t('help.materials')}</p>
+        <Example id="materials" />
         <ol class="materials">
           {p.materials.map((m, i) => (
             <li key={i} class="material">

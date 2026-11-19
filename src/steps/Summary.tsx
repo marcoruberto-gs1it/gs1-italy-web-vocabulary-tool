@@ -84,6 +84,10 @@ export function Summary() {
       { label: t('field.street'), value: [L.street, [L.postalCode, L.locality, L.region].filter(Boolean).join(' '), L.country ? countryName(L.country) : ''].filter(Boolean).join(', '), field: 'street' },
       { label: t('field.locationUrl'), value: L.url, field: 'locationUrl' },
     ],
+    // Altri dati: ogni proprietà aggiunta dal vocabolario, con il suo termine.
+    extras: Object.entries(s.extras)
+      .filter(([, x]) => x.value.trim())
+      .map(([k, x]) => ({ label: `${x.label} (${k.slice(k.lastIndexOf('>') + 1)})`, value: x.unit ? `${x.value} ${x.unit}` : x.value, field: `extra:${k}` })),
   }
 
   const steps = visibleSteps(s).filter((id) => rows[id])

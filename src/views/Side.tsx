@@ -10,6 +10,7 @@ import type { TabId } from '../model/tabs'
 import { gsap, useGsap } from '../motion'
 import { DetailsPlate } from '../plates/DetailsPlate'
 import { MarkupPlate } from '../plates/FlowPlates'
+import { ExtrasPlate } from '../plates/ExtrasPlate'
 import { GraphPlate } from '../plates/GraphPlate'
 import { PlacePlate } from '../plates/PlacePlate'
 import { ProductPlate } from '../plates/ProductPlate'
@@ -22,6 +23,7 @@ const PLATES: Record<Exclude<TabId, 'welcome'> | 'expert', () => JSX.Element> = 
   details: DetailsPlate,
   sale: SalePlate,
   place: PlacePlate,
+  more: ExtrasPlate,
   check: GraphPlate,
   markup: MarkupPlate,
   expert: GraphPlate,
@@ -30,10 +32,11 @@ const PLATES: Record<Exclude<TabId, 'welcome'> | 'expert', () => JSX.Element> = 
 /** Il colore della card della tavola, diverso per ogni tab come le card del riferimento. */
 const TONE: Record<Exclude<TabId, 'welcome'> | 'expert', string> = {
   start: 'blue',
-  product: 'peach',
+  product: 'orange',
   details: 'green',
   sale: 'teal',
   place: 'blue',
+  more: 'teal',
   check: 'green',
   markup: 'blue',
   expert: 'blue',

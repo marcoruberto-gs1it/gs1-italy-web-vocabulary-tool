@@ -13,7 +13,7 @@ describe('passi del wizard', () => {
   })
 
   it('prodotto generico di un produttore: niente passi di categoria né offerta', () => {
-    expect(visibleSteps(product())).toEqual(['welcome', 'settings', 'role', 'subject', 'category', 'identity', 'packaging', 'consumer', 'company', 'summary', 'markup'])
+    expect(visibleSteps(product())).toEqual(['welcome', 'settings', 'role', 'subject', 'category', 'identity', 'packaging', 'consumer', 'company', 'extras', 'summary', 'markup'])
   })
 
   it('alimentari e abbigliamento aggiungono il loro passo', () => {
@@ -30,9 +30,9 @@ describe('passi del wizard', () => {
 
   it('sede aziendale: dal soggetto si va ai dati della sede, poi riepilogo e markup', () => {
     const s: State = { ...base, role: 'manufacturer', subject: 'location' }
-    expect(visibleSteps(s)).toEqual(['welcome', 'settings', 'role', 'subject', 'location', 'summary', 'markup'])
+    expect(visibleSteps(s)).toEqual(['welcome', 'settings', 'role', 'subject', 'location', 'extras', 'summary', 'markup'])
     expect(neighbour(s, 'subject', 1)).toBe('location')
-    expect(neighbour(s, 'location', 1)).toBe('summary')
+    expect(neighbour(s, 'location', 1)).toBe('extras')
   })
 
   it('il passo successivo salta quelli non pertinenti', () => {

@@ -1,4 +1,5 @@
 /** Controlli sui dati inseriti: errori che bloccano "Avanti" e avvisi che non bloccano. */
+import { invalidKeys } from './extras'
 import type { MessageKey } from '../i18n/messages'
 import { checkGln, checkGtin, isHostname, type KeyCheck } from './gs1'
 import { NUTRIENT_KEYS, type State, type Text } from './state'
@@ -101,6 +102,8 @@ export function issuesOf(s: State): Issue[] {
     if (L.country.trim() && !isCountry(L.country)) add('locationCountry', 'location', 'error', 'error.country')
     url('locationUrl', 'location', L.url)
   }
+  // Altri dati: un valore scritto ma non pubblicabile è un errore sul suo campo.
+  if (steps.includes('extras')) for (const key of invalidKeys(s.extras)) add(`extra:${key}`, 'extras', 'error', `error.extra.${s.extras[key].kind}` as MessageKey)
   return out
 }
 

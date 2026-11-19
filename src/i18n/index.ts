@@ -70,3 +70,6 @@ export function countryName(code: string): string {
     return code
   }
 }
+
+/** La chiave esiste tra i testi? Serve ai testi facoltativi, come gli esempi dei campi. */
+export const hasKey = (key: string) => key in it

@@ -2,6 +2,7 @@
 import type { JSX } from 'preact'
 import type { MessageKey } from '../i18n'
 import type { StepId } from '../model/steps'
+import { Extras } from './Extras'
 import { Food } from './Food'
 import { LocationStep } from './Location'
 import { Company, Consumer, Identity, Offer, Packaging } from './Product'
@@ -21,6 +22,7 @@ export const STEP_FIELDS: Partial<Record<StepId, () => JSX.Element>> = {
   offer: Offer,
   company: Company,
   location: LocationStep,
+  extras: Extras,
 }
 
 /** La frase introduttiva sotto il titolo di ciascun passo. */
@@ -37,5 +39,6 @@ export const STEP_INTRO: Partial<Record<StepId, MessageKey>> = {
   offer: 'offer.intro',
   company: 'company.intro',
   location: 'location.intro',
+  extras: 'extras.intro',
   summary: 'summary.intro',
 }

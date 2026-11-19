@@ -15,6 +15,7 @@ export const STEPS = [
   'offer',
   'company',
   'location',
+  'extras',
   'summary',
   'markup',
 ] as const
@@ -56,6 +57,7 @@ export function visibleSteps(s: State): StepId[] {
     offer: hasOffer(s),
     company: product,
     location: s.subject === 'location',
+    extras: s.subject !== '',
     summary: true,
     markup: true,
   }
@@ -70,4 +72,4 @@ export function neighbour(s: State, step: StepId, dir: 1 | -1): StepId | undefin
 }
 
 /** Passi senza campi obbligatori: si possono saltare con "Lo compilo dopo". */
-export const OPTIONAL_STEPS: StepId[] = ['packaging', 'food', 'wearable', 'consumer', 'company']
+export const OPTIONAL_STEPS: StepId[] = ['packaging', 'food', 'wearable', 'consumer', 'company', 'extras']

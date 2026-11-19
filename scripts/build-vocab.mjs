@@ -16,9 +16,12 @@ const english = (v) => {
   return (typeof en === 'string' ? en : (en?.['@value'] ?? '')).replace(/\s+/g, ' ').trim()
 }
 /** Riferimenti a classi o tipi, comprese le unioni (owl:unionOf). Restano i prefissi (gs1:, xsd:, rdf:). */
+/** I nodi anonimi (_:u1…): le unioni definite a parte, a cui domain e range rimandano con l'@id. */
+const blanks = new Map(graph.filter((n) => String(n['@id']).startsWith('_:')).map((n) => [n['@id'], n]))
 const refs = (v) =>
   [].concat(v ?? []).flatMap((d) => {
     if (d['@id'] && !d['@id'].startsWith('_:')) return [d['@id']]
+    if (d['@id'] && !d['owl:unionOf'] && blanks.has(d['@id'])) return refs(blanks.get(d['@id']))
     const u = d['owl:unionOf']
     return u ? [].concat(u['@list'] ?? u).flatMap((x) => (x['@id'] ? [x['@id']] : [])) : []
   })

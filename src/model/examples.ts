@@ -22,7 +22,7 @@ export function biscuits(): State {
         en: 'Baked cocoa shortbread biscuits. 250 g pack.',
       },
       image: 'https://www.example.com/img/biscotti-cacao.jpg',
-      gpc: '10000045',
+      gpc: '10000161',
       pageUrl: 'https://www.example.com/prodotti/biscotti-cacao',
       netContent: { value: '250', unit: 'GRM' },
       grossWeight: { value: '0.27', unit: 'KGM' },
@@ -67,6 +67,7 @@ export function denimJacket(): State {
         en: 'Four-pocket denim jacket with metal button fastening.',
       },
       image: 'https://www.example.com/img/giacca-denim.jpg',
+      gpc: '10001350',
       pageUrl: 'https://www.example.com/abbigliamento/giacca-denim',
       netContent: { value: '1', unit: 'H87' },
       grossWeight: { value: '0.75', unit: 'KGM' },
@@ -87,4 +88,32 @@ export function denimJacket(): State {
   }
 }
 
-export const EXAMPLES = { biscuits, denimJacket }
+/**
+ * Un'organizzazione: la sede di un'azienda di fantasia, con il GLN e l'indirizzo, e un contatto
+ * aggiunto da "Altri dati" come nodo annidato gs1:ContactPoint.
+ */
+export function office(): State {
+  const s = initialState()
+  return {
+    ...s,
+    english: true,
+    role: 'manufacturer',
+    subject: 'location',
+    location: {
+      name: 'Azienda Esempio S.r.l., sede di Milano',
+      gln: '8001234000097',
+      street: 'Via Esempio 10',
+      postalCode: '20121',
+      locality: 'Milano',
+      region: 'MI',
+      country: 'IT',
+      url: 'https://www.example.com/sedi/milano',
+    },
+    extras: {
+      'main>gs1:contactPoint': { kind: 'link', range: 'gs1:ContactPoint', label: 'Contact point', value: '' },
+      'main>gs1:contactPoint>gs1:email': { kind: 'text', range: 'xsd:string', label: 'Email', value: 'info@example.com' },
+    },
+  }
+}
+
+export const EXAMPLES = { biscuits, denimJacket, office }

@@ -68,17 +68,17 @@ Stack: Vite, TypeScript e Preact, con GSAP per il movimento e Lottie (`lottie-we
 
 ## Interfaccia
 
-Fondo con sfumature leggere nei colori GS1 Italy, card bianche molto arrotondate, card colorate per sezione (azzurro, teal, verde, pesca), controlli a pillola e titoli forti in maiuscolo.
+Solo i colori GS1 Italy (blu, arancio, teal, verde, bianco, off-white, grigio chiaro, grigio scuro) e le loro tinte schiarite sul bianco; un test controlla ogni colore del foglio di stile. Card bianche molto arrotondate, card colorate per sezione, controlli a pillola, titoli forti in maiuscolo. Il testo bianco sull'arancio è sempre grande e in grassetto (19 px), così rispetta il contrasto WCAG per il testo grande.
 
-- **Da dove partire**: la card principale con l'animazione del gemello digitale e il pulsante doppio (esempi / inizia); lo stack di GS1 [Online technologies](https://ref.gs1.org/sme-guidance/online-technologies) in sei card, ognuna con la sua icona animata e cosa fa lo strumento; cosa vuol dire comprensibile dalle macchine, in tre animazioni; il perché del web semantico; gli esempi; cosa tenere a portata di mano.
-- **Tab a pillola**: Da dove partire, Profilo, Prodotto, Dettagli, Vendita e azienda (oppure Sede), Verifica, Markup. I tab non pertinenti alle scelte non compaiono; quelli non ancora raggiunti restano disattivati. Frecce, Home e Fine come nel pattern ARIA dei tab.
-- **Tavole** (`src/plates/`): accanto a ogni form, in una card colorata, un'infografica vettoriale con i dati inseriti. Il Digital Link scomposto e l'albero delle classi GS1; la confezione con il barcode EAN-13 calcolato dal GTIN; l'etichetta alimentare o quella del capo; offerta, prodotto e azienda come nodi del markup; la facciata della sede; il grafo del JSON-LD; dove va il markup nella pagina. Un secondo tab mostra il JSON-LD.
-- **Richiami numerati**: lo stesso numero accanto all'etichetta del campo e nel punto della tavola; il richiamo si accende quando il campo ha il focus.
-- **Punteggio**: un anello che si riempie fino al valore, con il colore che cambia con il livello.
-- **Lottie** (`src/lottie/`): tutte le animazioni sono costruite nel codice, non esportate da un editor. L'apertura dell'home gira in loop; le icone dello stack e le tre animazioni sulle macchine partono quando entrano nello schermo e ripartono al passaggio del puntatore; le altre confermano il markup pronto, il punteggio pieno e la copia.
-- **GSAP** (`src/motion.ts`): il cambio di tavola e il punteggio che conta fino al valore.
+- **Da dove partire**: la card principale con l'animazione del gemello digitale; lo stack di GS1 [Online technologies](https://ref.gs1.org/sme-guidance/online-technologies/) come percorso in sei tappe, con il dato che passa da una tappa all'altra (il GTIN, il Digital Link, il reindirizzamento, i link type, il JSON-LD); cosa vuol dire comprensibile dalle macchine, in tre animazioni; il perché del web semantico; tre esempi illustrati (un alimentare, un capo d'abbigliamento, la sede di un'organizzazione); cosa tenere a portata di mano. Ogni testo ha la sua immagine o il suo pittogramma.
+- **Tab a pillola**: Da dove partire, Profilo, Prodotto, Dettagli, Vendita e azienda (oppure Sede), Altri dati, Verifica, Markup. Indietro e Avanti stanno in alto, in una testata che resta in vista mentre scorri. "Ricomincia" cancella subito.
+- **Esempi di compilazione**: ogni campo mostra un esempio del valore atteso; per le proprietà di "Altri dati" l'esempio dipende dal tipo di valore.
+- **Liste ufficiali**: la categoria GPC si sceglie dalla lista ufficiale GS1 (5.318 brick, nomi in italiano), cercando per nome o per codice; paesi, unità di misura, allergeni e valori delle code list vengono dalle liste del vocabolario.
+- **Altri dati** (`src/steps/Extras.tsx`, `src/model/extras.ts`, `src/model/terms.ts`): qualsiasi proprietà del GS1 Web Vocabulary valida per il nodo (il prodotto o la sede, l'azienda brand owner, l'offerta), cercandola per nome, termine o definizione. Il tipo di campo viene dal range: testo, URL, numero, data, sì/no, valore di una code list, quantità, paese, riferimento. Una proprietà che punta a una classe si collega a una risorsa (URL, GTIN o GLN, che diventa il suo Digital Link) oppure si descrive sul posto con le proprietà di quella classe, fino a tre livelli. Così si possono inserire 551 delle 555 proprietà attive del vocabolario 1.18 (vedi Limiti noti).
+- **Tavole** (`src/plates/`): accanto a ogni form, in una card colorata, un'infografica vettoriale con i dati inseriti, con richiami numerati collegati ai campi; per "Altri dati", quante proprietà del vocabolario usi su quante disponibili.
+- **Punteggio**: un anello che si riempie fino al valore.
+- **Lottie** (`src/lottie/`): tutte le animazioni sono costruite nel codice. L'apertura dell'home gira in loop; le icone del percorso e le tre animazioni sulle macchine partono quando entrano nello schermo.
 - **Movimento ridotto**: con `prefers-reduced-motion` GSAP non parte e Lottie mostra un fotogramma fermo.
-- **Colori**: blu GS1 dominante, arancio solo per l'azione principale, teal scuro per i dati inseriti, verde per le conferme. I contrasti delle card colorate sono nei test.
 
 ## Verifiche
 
@@ -93,6 +93,9 @@ Fondo con sfumature leggere nei colori GS1 Italy, card bianche molto arrotondate
 - validità delle animazioni Lottie e uso dei soli colori GS1 Italy;
 - tab visibili per ogni percorso, navigazione tra tab, tab rimandabili;
 - codifica EAN-13: guardie, parità della prima cifra, set L, G e R;
+- solo colori GS1 Italy o loro tinte sul bianco, in tutto il foglio di stile;
+- lista GPC ufficiale: codici a otto cifre, codici degli esempi corretti, ricerca per parole e per codice;
+- Altri dati: ogni proprietà attiva del vocabolario raggiungibile da un nodo principale o annidato (eccezioni motivate), un valore per ogni tipo di campo su prodotto, azienda, offerta e sede con domain e range rispettati ed espansione `jsonld.js` riuscita, valori non validi esclusi e segnalati;
 - completezza delle traduzioni e coerenza delle variabili.
 
 Verificati a mano nel browser (Edge, schermate in `docs/screenshots/`): ogni tab del wizard con la sua tavola, le animazioni, la modalità esperto, la vista mobile a 390 px senza scroll orizzontale, la navigazione da tastiera tra i tab (frecce).
@@ -101,9 +104,10 @@ Verificati a mano nel browser (Edge, schermate in `docs/screenshots/`): ogni tab
 
 - Il tool *Web Markup* di GS1 Global Office (gs1.org/1/smart-search-demo) non è stato studiato: il sito blocca la lettura automatica. Il flusso del wizard segue la specifica di progetto e il tool di Mark Harrison.
 - La griglia degli allergeni copre i 14 allergeni del Regolamento UE 1169/2011; gli altri valori della code list non sono proposti.
-- La modalità esperto mostra gli stessi campi del wizard raggruppati in una pagina; non genera ancora i campi dall'intero vocabolario.
+- Delle 555 proprietà attive del vocabolario, 4 non si possono inserire: `gs1:applicableTo` (descrive i link type), `gs1:messageSender`, `gs1:messageRecipient` (di `gs1:Message`) e `gs1:originalCodeValue` (di `gs1:TypeCode`). Nessuna proprietà del vocabolario porta a queste classi, quindi non si appendono a un prodotto o a una sede.
+- In "Altri dati" ogni proprietà si aggiunge una volta per nodo (un solo valore, o un solo nodo annidato); i nodi annidati arrivano a tre livelli; le quantità usano le unità più comuni (g, kg, ml, l, pezzi, kJ, kcal).
+- Etichette e definizioni delle proprietà di "Altri dati" sono quelle del vocabolario, in inglese; i nomi dei brick GPC sono in italiano anche con l'interfaccia in inglese.
 - Marca, nomi di aziende e indirizzi si scrivono in una sola lingua e vanno nel markup con `@language: "it"`.
-- Il codice GPC è controllato solo nel formato (otto cifre), non contro l'elenco dei brick.
 - Il dominio `id.gs1it.org` è proposto come opzione, ma lo strumento non verifica che il resolver sia attivo.
 - `schema:gtin` è ancora nell'area *pending* di schema.org; Google lo legge comunque. Il Rich Results Test e lo Schema Markup Validator vedono solo le proprietà schema.org.
 

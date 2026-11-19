@@ -10,7 +10,7 @@
 type Rgb = [number, number, number]
 const rgb = (hex: string): Rgb => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255) as Rgb
 
-const GREEN = rgb('#00703a')
+const GREEN = rgb('#00b74f')
 const TEAL = rgb('#22bcb9')
 const WHITE = rgb('#ffffff')
 
@@ -130,11 +130,11 @@ export const copied = doc('copied', 24, 30, [
  */
 const W = 200
 const H = 140
-const GREY = rgb('#c8ced6')
-const LINE = rgb('#858f9a')
+const GREY = rgb('#e5e8eb')
+const LINE = rgb('#808080')
 const BLUE = rgb('#002c6c')
-const BLUE2 = rgb('#1d4f9a')
-const SKY = rgb('#dce6f5')
+const BLUE2 = rgb('#002c6c')
+const SKY = rgb('#d6dde7')
 
 const rect = (x: number, y: number, w: number, h: number, r = 2) => ({ ty: 'rc', d: 1, p: still([x + w / 2, y + h / 2]), s: still([w, h]), r: still(r) })
 const ellipse = (x: number, y: number, d: number) => ({ ty: 'el', d: 1, p: still([x, y]), s: still([d, d]) })

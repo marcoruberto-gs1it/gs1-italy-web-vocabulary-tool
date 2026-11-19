@@ -17,12 +17,13 @@ export const lineage = (cls: string): string[] => [cls, ...(classes[cls]?.subCla
 export const isKnownTerm = (t: string) => t in props || t in classes || Object.values(codeLists).some((l) => t in l)
 
 /** Il termine si può usare su un nodo di questi tipi? Restituisce l'errore, o null. */
-export function domainError(term: string, types: string[]): string | null {
+export function domainError(term: string, types: string[], strict = true): string | null {
   const p = props[term]
   if (!p) return `${term} non esiste nel vocabolario`
   if (p.status === 'deprecated') return `${term} è deprecato`
   const open = p.domain.length === 0 || p.domain.includes('owl:Thing')
-  if (open) return DOMAINLESS.includes(term) ? null : `${term} non ha dominio: va motivato in DOMAINLESS`
+  // Nella mappatura del wizard un termine senza dominio va motivato; tra gli "Altri dati" vale per qualsiasi nodo.
+  if (open) return !strict || DOMAINLESS.includes(term) ? null : `${term} non ha dominio: va motivato in DOMAINLESS`
   return p.domain.some((d) => types.some((t) => lineage(t).includes(d))) ? null : `${term} non si applica a ${types.join(', ')} (dominio: ${p.domain.join(', ')})`
 }
 
@@ -53,6 +54,7 @@ const isObj = (v: unknown): v is Node => !!v && typeof v === 'object' && !Array.
 /** Controlla un valore rispetto al range della proprietà. */
 function rangeError(term: string, value: unknown, ids: Set<string>): string | null {
   const range = props[term].range
+  if (!range.length || range.includes('owl:Thing')) return isObj(value) && typeof value['@id'] === 'string' ? null : `${term}: atteso un riferimento @id`
   if (range.includes('rdf:langString')) return isObj(value) && typeof value['@value'] === 'string' && typeof value['@language'] === 'string' ? null : `${term}: atteso un testo con @language`
   const xsd = range.find((r) => r.startsWith('xsd:'))
   if (xsd === 'xsd:string') return typeof value === 'string' ? null : `${term}: attesa una stringa`
@@ -70,7 +72,7 @@ function rangeError(term: string, value: unknown, ids: Set<string>): string | nu
 }
 
 /** Controlla domain e range di ogni proprietà gs1: in un documento JSON-LD prodotto dall'app. */
-export function checkDocument(doc: Node): string[] {
+export function checkDocument(doc: Node, strict = true): string[] {
   const nodes = (isObj(doc) && Array.isArray(doc['@graph']) ? doc['@graph'] : [doc]) as Node[]
   const ids = new Set(nodes.map((n) => n['@id']).filter((x): x is string => typeof x === 'string'))
   const errors: string[] = []
@@ -79,7 +81,7 @@ export function checkDocument(doc: Node): string[] {
     for (const t of [].concat((node['@type'] ?? []) as never) as string[]) if (t.startsWith('gs1:') && !(t in classes)) errors.push(`classe ${t} non esiste`)
     for (const [k, v] of Object.entries(node)) {
       if (!k.startsWith('gs1:')) continue
-      const e = domainError(k, types)
+      const e = domainError(k, types, strict)
       if (e) {
         errors.push(e)
         continue

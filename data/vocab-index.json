@@ -1123,7 +1123,10 @@
   "gs1:address": {
    "label": "Has Postal Address",
    "description": "The postal address for an organization or place.",
-   "domain": [],
+   "domain": [
+    "gs1:Organization",
+    "gs1:Place"
+   ],
    "range": [
     "gs1:PostalAddress"
    ],
@@ -1199,7 +1202,10 @@
   "gs1:afterHoursContact": {
    "label": "Has After Hours Contact",
    "description": "Links to after-hours contact information. For general contact details, gs1:contactPoint SHALL be used.",
-   "domain": [],
+   "domain": [
+    "gs1:Organization",
+    "gs1:Place"
+   ],
    "range": [
     "gs1:ContactPoint"
    ],
@@ -1832,7 +1838,11 @@
   "gs1:certification": {
    "label": "Has Certification",
    "description": "Certification information about a product, organisation or location.",
-   "domain": [],
+   "domain": [
+    "gs1:Product",
+    "gs1:Organization",
+    "gs1:Place"
+   ],
    "range": [
     "gs1:CertificationDetails"
    ],
@@ -2381,7 +2391,10 @@
   "gs1:contactPoint": {
    "label": "Has Business Contact",
    "description": "Contact information. To specify a contact specifically designated for after-hours support, see gs1:afterHoursContact",
-   "domain": [],
+   "domain": [
+    "gs1:Organization",
+    "gs1:Place"
+   ],
    "range": [
     "gs1:ContactPoint"
    ],
@@ -2938,7 +2951,10 @@
   "gs1:eligibleQuantity": {
    "label": "Eligible Quantity",
    "description": "The quantity including unit of measure for which the offer for good or service is valid. If this is not specified, an eligible quantity of 1 should be assumed.",
-   "domain": [],
+   "domain": [
+    "gs1:Offer",
+    "gs1:PriceSpecification"
+   ],
    "range": [
     "gs1:QuantitativeValue"
    ],
@@ -2951,7 +2967,10 @@
   "gs1:eligibleQuantityMaximum": {
    "label": "Eligible Quantity Maximum",
    "description": "The maximum quantity including unit of measure for which the offer for good or service is valid.",
-   "domain": [],
+   "domain": [
+    "gs1:Offer",
+    "gs1:PriceSpecification"
+   ],
    "range": [
     "gs1:QuantitativeValue"
    ],
@@ -2964,7 +2983,10 @@
   "gs1:eligibleQuantityMinimum": {
    "label": "Eligible Quantity Minimum",
    "description": "The minimum quantity including unit of measure for which the offer for good or service is valid.",
-   "domain": [],
+   "domain": [
+    "gs1:Offer",
+    "gs1:PriceSpecification"
+   ],
    "range": [
     "gs1:QuantitativeValue"
    ],
@@ -3469,7 +3491,10 @@
    "domain": [
     "gs1:Place"
    ],
-   "range": [],
+   "range": [
+    "gs1:GeoCoordinates",
+    "gs1:GeoShape"
+   ],
    "subPropertyOf": [],
    "functional": false,
    "status": "stable"
@@ -3477,7 +3502,10 @@
   "gs1:glnType": {
    "label": "Has GLN Type",
    "description": "Indicates what type of thing is being identified by a GLN.",
-   "domain": [],
+   "domain": [
+    "gs1:Organization",
+    "gs1:Place"
+   ],
    "range": [
     "gs1:GLN_TypeCode"
    ],
@@ -3488,7 +3516,10 @@
   "gs1:globalLocationNumber": {
    "label": "Global Location Number (GLN)",
    "description": "A Global Location Number (GLN) is the GS1 Identification Key used to identify physical locations or parties. The key comprises a GS1 Company Prefix, Location Reference and Check Digit. For more information see https://www.gs1.org/gln.",
-   "domain": [],
+   "domain": [
+    "gs1:Organization",
+    "gs1:Place"
+   ],
    "range": [
     "xsd:string"
    ],
@@ -4725,7 +4756,10 @@
   "gs1:managedBy": {
    "label": "Managed by",
    "description": "Links to the organisation that manages this place or organisation, as designated by the owner or another organisation.",
-   "domain": [],
+   "domain": [
+    "gs1:Organization",
+    "gs1:Place"
+   ],
    "range": [
     "gs1:Organization"
    ],
@@ -4752,7 +4786,10 @@
    "domain": [
     "gs1:Organization"
    ],
-   "range": [],
+   "range": [
+    "gs1:Organization",
+    "gs1:Place"
+   ],
    "subPropertyOf": [],
    "functional": false,
    "status": "stable"
@@ -5593,7 +5630,10 @@
   "gs1:organizationName": {
    "label": "Organization Name",
    "description": "The name of the organization expressed in text.",
-   "domain": [],
+   "domain": [
+    "gs1:PostalAddress",
+    "gs1:Organization"
+   ],
    "range": [
     "rdf:langString"
    ],
@@ -5723,7 +5763,10 @@
   "gs1:ownedBy": {
    "label": "Owned by",
    "description": "Links to the organisation(s) that own this place, in full or in part. This includes joint ventures. For leased locations, see gs1:lessorFor and gs1:isLeasedFrom.",
-   "domain": [],
+   "domain": [
+    "gs1:Organization",
+    "gs1:Place"
+   ],
    "range": [
     "gs1:Organization"
    ],
@@ -5737,7 +5780,10 @@
    "domain": [
     "gs1:Organization"
    ],
-   "range": [],
+   "range": [
+    "gs1:Organization",
+    "gs1:Place"
+   ],
    "subPropertyOf": [],
    "functional": false,
    "status": "stable"
@@ -6847,7 +6893,10 @@
   "gs1:regulatoryInformation": {
    "label": "Regulatory Information",
    "description": "Links to one or more groupings of information on applicable government regulations applicable to a trade item.",
-   "domain": [],
+   "domain": [
+    "gs1:Product",
+    "gs1:RegulatoryNotification"
+   ],
    "range": [
     "gs1:RegulatoryInformation"
    ],
@@ -7626,7 +7675,10 @@
   "gs1:statusTimestamp": {
    "label": "Status Timestamp",
    "description": "Date and time (including optional timezone) associated to status designations. Timestamps may be future dated to provide advance notice of status changes. For further information about the required lexical representation of date, time, and timezone please see https://www.w3.org/TR/xmlschema-2/#dateTime",
-   "domain": [],
+   "domain": [
+    "gs1:OrganizationStatusHistory",
+    "gs1:LocationStatusHistory"
+   ],
    "range": [
     "xsd:dateTime"
    ],

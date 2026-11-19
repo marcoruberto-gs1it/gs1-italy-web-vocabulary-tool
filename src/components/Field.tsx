@@ -2,7 +2,7 @@
 import type { ComponentChildren } from 'preact'
 import { useId, useState } from 'preact/hooks'
 import { useForm } from '../form'
-import { t, type MessageKey } from '../i18n'
+import { hasKey, t, tk, type MessageKey } from '../i18n'
 import type { StepId } from '../model/steps'
 import { Mark } from '../plates/marks'
 
@@ -24,12 +24,14 @@ type Props = {
   required?: boolean
   /** Messaggio di conferma (es. GTIN valido), mostrato quando non ci sono errori. */
   valid?: string
+  /** Esempio di compilazione già scritto; se manca, si usa quello dei testi (ex.<id>). */
+  example?: string
   /** Più controlli: l'etichetta diventa la legenda di un gruppo. */
   group?: boolean
   children: (control: Control) => ComponentChildren
 }
 
-export function Field({ id, step, label, hint, help, term, required, valid, group, children }: Props) {
+export function Field({ id, step, label, hint, help, term, required, valid, group, example, children }: Props) {
   const { issues, shows, touch } = useForm()
   const visible = shows(id, step) ? issues.filter((i) => i.field === id) : []
   const error = visible.find((i) => i.level === 'error')
@@ -60,11 +62,27 @@ export function Field({ id, step, label, hint, help, term, required, valid, grou
           {hint}
         </p>
       )}
+      <Example id={id} text={example} />
       {children(control)}
       <p class={`msg ${error ? 'msg-error' : warn ? 'msg-warn' : valid ? 'msg-ok' : ''}`} id={msgId} aria-live="polite">
         {message ? t(message.key, message.vars) : (valid ?? '')}
       </p>
     </Wrapper>
+  )
+}
+
+/** La chiave dell'esempio di un campo: i campi ripetuti (materiale 1, 2…) condividono lo stesso esempio. */
+const exampleKey = (id: string) => `ex.${id.replace(/^material-\d+-name$/, 'material').replace(/^material-\d+-percent$/, 'percent')}`
+
+/** Un esempio di come compilare il campo, sotto l'etichetta. Se il campo non ne ha, niente. */
+export function Example({ id, text }: { id: string; text?: string }) {
+  const key = exampleKey(id)
+  if (!text && !hasKey(key)) return null
+  return (
+    <p class="example-hint">
+      <span class="example-tag">{t('example.label')}</span>
+      <span class="example-value">{text ?? tk(key)}</span>
+    </p>
   )
 }
 

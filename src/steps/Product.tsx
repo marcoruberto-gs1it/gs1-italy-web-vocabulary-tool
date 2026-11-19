@@ -1,5 +1,6 @@
 /** Passi del prodotto comuni a tutte le categorie. */
 import { Field } from '../components/Field'
+import { GpcInput } from '../components/GpcInput'
 import { LangInput, QuantityInput, Select, TextInput } from '../components/inputs'
 import { product, useForm } from '../form'
 import { countryName, t } from '../i18n'
@@ -58,7 +59,7 @@ export function Identity() {
         {(c) => <TextInput control={c} type="url" inputMode="url" placeholder="https://" value={p.image} onInput={(image) => update(product({ image }))} />}
       </Field>
       <Field id="gpc" step="identity" label={t('field.gpc')} hint={t('hint.gpc')} help="help.gpc" term="gs1:gpcCategoryCode">
-        {(c) => <TextInput control={c} inputMode="numeric" size="short" value={p.gpc} onInput={(gpc) => update(product({ gpc }))} />}
+        {(c) => <GpcInput control={c} value={p.gpc} onInput={(gpc) => update(product({ gpc }))} />}
       </Field>
       <Field id="pageUrl" step="identity" label={t('field.pageUrl')} hint={t('hint.pageUrl')} help="help.pageUrl" term="gs1:pip">
         {(c) => <TextInput control={c} type="url" inputMode="url" placeholder="https://" value={p.pageUrl} onInput={(pageUrl) => update(product({ pageUrl }))} />}

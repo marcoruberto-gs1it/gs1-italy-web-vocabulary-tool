@@ -11,6 +11,7 @@ export const TABS = [
   { id: 'details', steps: ['food', 'wearable', 'consumer'] },
   { id: 'sale', steps: ['offer', 'company'] },
   { id: 'place', steps: ['location'] },
+  { id: 'more', steps: ['extras'] },
   { id: 'check', steps: ['summary'] },
   { id: 'markup', steps: ['markup'] },
 ] as const satisfies readonly { id: string; steps: readonly StepId[] }[]

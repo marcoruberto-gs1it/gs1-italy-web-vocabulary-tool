@@ -3,6 +3,7 @@
  * in parallelo. Si omette tutto ciò che è vuoto o non valido: nel markup finisce solo ciò che si può pubblicare.
  */
 import { CONTAINMENT, EU_ALLERGENS } from '../mapping'
+import { extrasFor } from './extras'
 import { AI, checkGln, checkGtin, digitalLink } from './gs1'
 import { dlDomain, languages, type Quantity, type State, type Text } from './state'
 import { hasOffer, productClass } from './steps'
@@ -94,6 +95,7 @@ export function productNode(s: State): Json {
     '@type': 'gs1:Organization',
     'gs1:organizationName': plain(p.ownerName),
     'gs1:partyGLN': ownerGln.ok ? ownerGln.value : undefined,
+    ...extrasFor(s, 'owner'),
   })
 
   const offer = hasOffer(s) && toNumber(p.price) && isCurrency(s.currency)
@@ -135,6 +137,7 @@ export function productNode(s: State): Json {
     'gs1:consumerStorageInstructions': lang(p.storage),
     'gs1:consumerUsageInstructions': lang(p.usage),
     'gs1:brandOwner': owner,
+    ...extrasFor(s, 'main'),
     ...(sch
       ? {
           'schema:gtin': gtin.ok ? gtin.value : undefined,
@@ -167,6 +170,7 @@ export function offerNode(s: State, productId: string | undefined): Json | undef
     '@type': 'gs1:Offer',
     ...(productId ? { 'gs1:itemOffered': { '@id': productId } } : {}),
     'gs1:priceSpecification': { '@type': 'gs1:PriceSpecification', 'gs1:price': float(s.product.price), 'gs1:priceCurrency': s.currency },
+    ...extrasFor(s, 'offer'),
   }
 }
 
@@ -192,6 +196,7 @@ export function locationNode(s: State): Json {
         'gs1:addressCountry': country ? { '@type': 'gs1:Country', 'gs1:countryCode': country } : undefined,
       }),
       'gs1:homepage': anyUri(L.url),
+      ...extrasFor(s, 'main'),
       ...(sch
         ? {
             'schema:name': L.name.trim() || undefined,

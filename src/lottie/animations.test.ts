@@ -33,7 +33,7 @@ describe('animazioni Lottie', () => {
   })
   it('usano solo i colori GS1 Italy, senza arancio', () => {
     const used = new Set([success, copied, freeText, structured, linked].flatMap((a) => [...colors(a)]))
-    const palette = ['#00703a', '#22bcb9', '#ffffff', '#002c6c', '#1d4f9a', '#dce6f5', '#c8ced6', '#858f9a']
+    const palette = ['#002c6c', '#22bcb9', '#00b74f', '#ffffff', '#e5e8eb', '#d6dde7', '#808080', '#e4f7f7']
     expect([...used].filter((c) => !palette.includes(c))).toEqual([])
   })
 })

@@ -1,7 +1,8 @@
 /**
  * Il wizard a tab: il pannello del tab corrente raccoglie i suoi passi, uno sotto l'altro,
- * con Indietro, Avanti e "Lo compilo dopo" in fondo.
+ * con Indietro, Avanti e "Lo compilo dopo" in alto, sempre in vista.
  */
+import type { EXAMPLES } from '../model/examples'
 import { useEffect, useRef } from 'preact/hooks'
 import { useForm } from '../form'
 import { t, tk } from '../i18n'
@@ -20,7 +21,7 @@ type Props = {
   onNext: () => void
   onBack: () => void
   onLater: () => void
-  onExample: (name: 'biscuits' | 'denimJacket') => void
+  onExample: (name: keyof typeof EXAMPLES) => void
 }
 
 export function Wizard({ tab, blocked, onNext, onBack, onLater, onExample }: Props) {
@@ -56,9 +57,41 @@ export function Wizard({ tab, blocked, onNext, onBack, onLater, onExample }: Pro
         <Welcome heading={heading} onExample={onExample} />
       ) : (
         <>
-          <h1 ref={heading} tabIndex={-1} class="panel-title">
-            {tabLabel(state, tab)}
-          </h1>
+          <div class="panel-head">
+            <h1 ref={heading} tabIndex={-1} class="panel-title">
+              {tabLabel(state, tab)}
+            </h1>
+            <div class="wizard-nav">
+              <button type="button" class="btn-secondary" onClick={onBack}>
+                {t('nav.back')}
+              </button>
+              <span class="spacer" />
+              {optionalTab(state, tab) && (
+                <button type="button" class="link-btn" onClick={onLater}>
+                  {t('nav.later')}
+                </button>
+              )}
+              {tab !== 'markup' && (
+                <button type="submit" class="btn-primary">
+                  {tab === 'check' ? t('nav.create') : t('nav.next')}
+                </button>
+              )}
+            </div>
+          </div>
+          {blocked && errors.length > 0 && (
+            <div class="notice notice-error" role="alert">
+              <p>{t('nav.blocked')}</p>
+              <ul>
+                {errors.map((e) => (
+                  <li key={e.field}>
+                    <button type="button" class="link-btn" onClick={() => goTo(e.step, e.field)}>
+                      {t(e.key, e.vars)}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           {steps.map((s) => {
             const Fields = STEP_FIELDS[s]
             const intro = STEP_INTRO[s]
@@ -79,36 +112,6 @@ export function Wizard({ tab, blocked, onNext, onBack, onLater, onExample }: Pro
               </section>
             )
           })}
-          {blocked && errors.length > 0 && (
-            <div class="notice notice-error" role="alert">
-              <p>{t('nav.blocked')}</p>
-              <ul>
-                {errors.map((e) => (
-                  <li key={e.field}>
-                    <button type="button" class="link-btn" onClick={() => goTo(e.step, e.field)}>
-                      {t(e.key, e.vars)}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          <div class="wizard-nav">
-            <button type="button" class="btn-secondary" onClick={onBack}>
-              {t('nav.back')}
-            </button>
-            <span class="spacer" />
-            {optionalTab(state, tab) && (
-              <button type="button" class="link-btn" onClick={onLater}>
-                {t('nav.later')}
-              </button>
-            )}
-            {tab !== 'markup' && (
-              <button type="submit" class="btn-primary">
-                {tab === 'check' ? t('nav.create') : t('nav.next')}
-              </button>
-            )}
-          </div>
         </>
       )}
     </form>

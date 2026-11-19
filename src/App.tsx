@@ -26,7 +26,6 @@ export function App() {
   const [mode, setMode] = useState<'wizard' | 'expert'>(saved?.mode ?? 'wizard')
   const [touched, setTouched] = useState<Set<string>>(new Set())
   const [submitted, setSubmitted] = useState<Set<StepId>>(new Set())
-  const [confirmReset, setConfirmReset] = useState(false)
   const [active, setActive] = useState('')
   const focusAfter = useRef<string | null>(null)
 
@@ -113,7 +112,6 @@ export function App() {
     setTouched(new Set())
     setSubmitted(new Set())
     setStep('welcome')
-    setConfirmReset(false)
   }
 
   // Un tab si apre se è già stato raggiunto, o se viene prima di uno raggiunto.
@@ -150,21 +148,9 @@ export function App() {
                     </button>
                   ))}
                 </div>
-                {confirmReset ? (
-                  <span class="confirm" role="group" aria-label={t('app.resetQuestion')}>
-                    <span>{t('app.resetQuestion')}</span>
-                    <button type="button" class="link-btn danger" onClick={reset}>
-                      {t('app.resetConfirm')}
-                    </button>
-                    <button type="button" class="link-btn" onClick={() => setConfirmReset(false)}>
-                      {t('app.cancel')}
-                    </button>
-                  </span>
-                ) : (
-                  <button type="button" class="link-btn" onClick={() => setConfirmReset(true)}>
-                    {t('app.reset')}
-                  </button>
-                )}
+                <button type="button" class="link-btn" onClick={reset}>
+                  {t('app.reset')}
+                </button>
               </div>
             </header>
             {mode === 'wizard' && <TabBar state={state} tabs={['welcome', ...tabs]} current={tab} reachable={(id) => id === 'welcome' || reachable(id)} status={(id) => (id === 'welcome' ? '' : status(id))} onGo={goTab} />}

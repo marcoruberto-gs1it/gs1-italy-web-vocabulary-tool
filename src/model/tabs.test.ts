@@ -13,7 +13,7 @@ describe('tab del wizard', () => {
 
   it('un prodotto alimentare senza offerta: niente sede, dettagli con alimentari', () => {
     const s = biscuits()
-    expect(visibleTabs(s)).toEqual(['start', 'product', 'details', 'sale', 'check', 'markup'])
+    expect(visibleTabs(s)).toEqual(['start', 'product', 'details', 'sale', 'more', 'check', 'markup'])
     expect(stepsOf(s, 'details')).toEqual(['food', 'consumer'])
     expect(stepsOf(s, 'sale')).toEqual(['company'])
   })
@@ -26,7 +26,7 @@ describe('tab del wizard', () => {
 
   it('una sede salta prodotto, dettagli e vendita', () => {
     const s = { ...initialState(), subject: 'location' as const }
-    expect(visibleTabs(s)).toEqual(['start', 'place', 'check', 'markup'])
+    expect(visibleTabs(s)).toEqual(['start', 'place', 'more', 'check', 'markup'])
   })
 
   it('navigazione tra tab', () => {

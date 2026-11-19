@@ -1,4 +1,5 @@
 /** Lo stato dell'app, condiviso da wizard e modalità esperto, e il suo salvataggio nel browser. */
+import type { Extra } from './extras'
 
 /** Testo in italiano (sempre) e in inglese (se attivato nelle impostazioni). */
 export type Text = { it: string; en: string }
@@ -68,6 +69,8 @@ export type State = {
   subcategory: string
   product: Product
   location: Location
+  /** Le proprietà aggiunte da "Altri dati", per nodo e termine (es. 'main|gs1:batchNumber'). */
+  extras: Record<string, Extra>
 }
 
 const text = (): Text => ({ it: '', en: '' })
@@ -114,6 +117,7 @@ export const initialState = (): State => ({
   subcategory: '',
   product: emptyProduct(),
   location: emptyLocation(),
+  extras: {},
 })
 
 /** Il dominio usato negli @id del GS1 Digital Link. */
