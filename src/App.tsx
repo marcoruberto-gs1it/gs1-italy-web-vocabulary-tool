@@ -5,10 +5,14 @@ import { setLang, t, useLang } from './i18n'
 import { EXAMPLES } from './model/examples'
 import { buildJsonLd, toJson } from './model/jsonld'
 import { clearSaved, initialState, load, save, type State } from './model/state'
-import { neighbour, STEPS, visibleSteps, type StepId } from './model/steps'
+import { STEPS, type StepId } from './model/steps'
+import { neighbourTab, stepsOf, tabOf, visibleTabs, type TabId } from './model/tabs'
 import { issuesOf, stepErrors } from './model/validate'
+import { markOf, marksFor, MarksContext } from './plates/marks'
+import { ActiveContext } from './plates/parts'
 import { Expert } from './views/Expert'
-import { Preview } from './views/Preview'
+import { Side } from './views/Side'
+import { TabBar } from './views/TabBar'
 import { Wizard } from './views/Wizard'
 
 const saved = load()
@@ -22,17 +26,19 @@ export function App() {
   const [mode, setMode] = useState<'wizard' | 'expert'>(saved?.mode ?? 'wizard')
   const [touched, setTouched] = useState<Set<string>>(new Set())
   const [submitted, setSubmitted] = useState<Set<StepId>>(new Set())
-  const [previewOpen, setPreviewOpen] = useState(true)
-  const [sheetOpen, setSheetOpen] = useState(false)
   const [confirmReset, setConfirmReset] = useState(false)
+  const [active, setActive] = useState('')
   const focusAfter = useRef<string | null>(null)
 
   const issues = useMemo(() => issuesOf(state), [state])
   const json = useMemo(() => toJson(buildJsonLd(state)), [state])
-  const steps = visibleSteps(state)
+  const tabs = visibleTabs(state)
 
-  // Un passo che le scelte hanno reso non pertinente non resta aperto.
-  const current = steps.includes(step) ? step : 'summary'
+  // Un tab che le scelte hanno reso non pertinente non resta aperto.
+  const wanted = tabOf(step)
+  const tab: TabId = wanted === 'welcome' || tabs.includes(wanted) ? wanted : 'check'
+  const tabSteps = stepsOf(state, tab)
+  const current = tabSteps.includes(step) ? step : tabSteps[0]
 
   useEffect(() => save({ state, step: current, done: visited, mode }), [state, current, visited, mode])
 
@@ -41,7 +47,7 @@ export function App() {
     const id = focusAfter.current
     if (!id) return
     focusAfter.current = null
-    const el = document.getElementById(id)
+    const el = document.getElementById(id) ?? document.querySelector<HTMLElement>(`[data-field="${id}"]`)
     if (!el) return
     const target = el.matches('input, select, textarea, button') ? el : el.querySelector<HTMLElement>('input, select, textarea, button')
     target?.focus({ preventScroll: true })
@@ -52,11 +58,13 @@ export function App() {
     box.classList.add('flash')
   })
 
+  /** Apre un tab (o un passo preciso) e segna come visti i passi del tab che si lascia. */
   const go = (to: StepId) => {
-    setVisited((v) => (v.includes(current) ? v : [...v, current]))
+    setVisited((v) => [...new Set([...v, ...stepsOf(state, tab)])])
     setStep(to)
     window.scrollTo({ top: 0 })
   }
+  const goTab = (to: TabId) => go(to === 'welcome' ? 'welcome' : stepsOf(state, to)[0])
 
   const form: Form = {
     state,
@@ -69,27 +77,29 @@ export function App() {
         focusAfter.current = field
         setTouched((s) => new Set(s).add(field))
       }
-      if (mode === 'wizard' && to !== current) go(to)
+      if (mode === 'wizard' && tabOf(to) !== tab) go(to)
       else setState((s) => ({ ...s }))
     },
   }
 
+  const tabErrors = (id: TabId) => stepsOf(state, id).flatMap((s) => stepErrors(issues, s))
+
   const next = () => {
-    const errors = stepErrors(issues, current)
-    if (errors.length) {
-      setSubmitted((s) => new Set(s).add(current))
+    const errors = tabErrors(tab)
+    if (tab !== 'welcome' && errors.length) {
+      setSubmitted((s) => new Set([...s, ...tabSteps]))
       focusAfter.current = errors[0].field
       setState((s) => ({ ...s }))
       return
     }
-    const to = neighbour(state, current, 1)
-    if (to) go(to)
+    const to = neighbourTab(state, tab, 1)
+    if (to) goTab(to)
   }
 
   const loadExample = (name: keyof typeof EXAMPLES) => {
     const s = EXAMPLES[name]()
     setState(s)
-    setVisited(visibleSteps(s))
+    setVisited(visibleTabs(s).flatMap((x) => stepsOf(s, x)))
     setTouched(new Set())
     setSubmitted(new Set())
     setStep(mode === 'wizard' ? 'summary' : current)
@@ -106,75 +116,91 @@ export function App() {
     setConfirmReset(false)
   }
 
+  // Un tab si apre se è già stato raggiunto, o se viene prima di uno raggiunto.
+  const reachedIndex = Math.max(tabs.indexOf(tab as never), ...visited.map((v) => tabs.indexOf(tabOf(v) as never)))
+  const reachable = (id: TabId) => tabs.indexOf(id as never) <= reachedIndex
+  const status = (id: TabId): 'done' | 'error' | '' => {
+    const steps = stepsOf(state, id)
+    if (steps.some((s) => submitted.has(s)) && tabErrors(id).length) return 'error'
+    return steps.every((s) => visited.includes(s)) && !tabErrors(id).length && id !== tab ? 'done' : ''
+  }
+
+  const sideTab = mode === 'expert' ? 'expert' : tab
   return (
     <FormContext.Provider value={form}>
-      <div class={`app ${previewOpen ? '' : 'preview-closed'} ${mode === 'wizard' && current === 'markup' ? 'no-preview' : ''}`} lang={language}>
-        <header class="topbar">
-          <img class="logo" src={logo} alt={t('app.logoAlt')} width={112} height={40} />
-          <span class="app-title">{t('app.title')}</span>
-          <div class="topbar-actions">
-            <div class="segmented" role="group" aria-label={t('app.mode')}>
-              <button type="button" aria-pressed={mode === 'wizard'} onClick={() => setMode('wizard')}>
-                {t('app.wizard')}
-              </button>
-              <button type="button" aria-pressed={mode === 'expert'} onClick={() => setMode('expert')}>
-                {t('app.expert')}
-              </button>
+      <MarksContext.Provider value={mode === 'wizard' ? marksFor(state, tab) : []}>
+        <ActiveContext.Provider value={active}>
+          <div class={`app mode-${mode}`} lang={language}>
+            <header class="topbar">
+              <img class="logo" src={logo} alt={t('app.logoAlt')} width={112} height={40} />
+              <span class="app-title">{t('app.title')}</span>
+              <div class="topbar-actions">
+                <div class="segmented" role="group" aria-label={t('app.mode')}>
+                  <button type="button" aria-pressed={mode === 'wizard'} onClick={() => setMode('wizard')}>
+                    {t('app.wizard')}
+                  </button>
+                  <button type="button" aria-pressed={mode === 'expert'} onClick={() => setMode('expert')}>
+                    {t('app.expert')}
+                  </button>
+                </div>
+                <div class="segmented" role="group" aria-label={t('app.language')}>
+                  {(['it', 'en'] as const).map((l) => (
+                    <button type="button" key={l} lang={l} aria-pressed={language === l} onClick={() => setLang(l)}>
+                      {l.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+                {confirmReset ? (
+                  <span class="confirm" role="group" aria-label={t('app.resetQuestion')}>
+                    <span>{t('app.resetQuestion')}</span>
+                    <button type="button" class="link-btn danger" onClick={reset}>
+                      {t('app.resetConfirm')}
+                    </button>
+                    <button type="button" class="link-btn" onClick={() => setConfirmReset(false)}>
+                      {t('app.cancel')}
+                    </button>
+                  </span>
+                ) : (
+                  <button type="button" class="link-btn" onClick={() => setConfirmReset(true)}>
+                    {t('app.reset')}
+                  </button>
+                )}
+              </div>
+            </header>
+            {mode === 'wizard' && <TabBar state={state} tabs={['welcome', ...tabs]} current={tab} reachable={(id) => id === 'welcome' || reachable(id)} status={(id) => (id === 'welcome' ? '' : status(id))} onGo={goTab} />}
+            <div
+              class={`sheet ${mode === 'wizard' && tab === 'welcome' ? 'is-welcome' : ''}`}
+              onFocusIn={(e) => {
+                const el = (e.target as HTMLElement).closest<HTMLElement>('[data-field], fieldset[id]')
+                setActive(el ? markOf(el.dataset.field ?? el.id) : '')
+              }}
+            >
+              <main class="main">
+                {mode === 'wizard' ? (
+                  <Wizard
+                    tab={tab}
+                    blocked={tabSteps.some((s) => submitted.has(s))}
+                    onNext={next}
+                    onBack={() => {
+                      const to = neighbourTab(state, tab, -1)
+                      if (to) goTab(to)
+                    }}
+                    onLater={() => {
+                      const to = neighbourTab(state, tab, 1)
+                      if (to) goTab(to)
+                    }}
+                    onExample={loadExample}
+                  />
+                ) : (
+                  <Expert />
+                )}
+              </main>
+              {sideTab !== 'welcome' && <Side tab={sideTab} json={json} />}
             </div>
-            <div class="segmented" role="group" aria-label={t('app.language')}>
-              {(['it', 'en'] as const).map((l) => (
-                <button type="button" key={l} lang={l} aria-pressed={language === l} onClick={() => setLang(l)}>
-                  {l.toUpperCase()}
-                </button>
-              ))}
-            </div>
-            {confirmReset ? (
-              <span class="confirm" role="group" aria-label={t('app.resetQuestion')}>
-                <span>{t('app.resetQuestion')}</span>
-                <button type="button" class="link-btn danger" onClick={reset}>
-                  {t('app.resetConfirm')}
-                </button>
-                <button type="button" class="link-btn" onClick={() => setConfirmReset(false)}>
-                  {t('app.cancel')}
-                </button>
-              </span>
-            ) : (
-              <button type="button" class="link-btn" onClick={() => setConfirmReset(true)}>
-                {t('app.reset')}
-              </button>
-            )}
+            <footer class="footer">{t('app.footer')}</footer>
           </div>
-        </header>
-        <div class="workspace">
-          <main class="main">
-            {mode === 'wizard' ? (
-              <Wizard
-                step={current}
-                visited={visited}
-                blocked={submitted.has(current)}
-                onNext={next}
-                onBack={() => {
-                  const to = neighbour(state, current, -1)
-                  if (to) go(to)
-                }}
-                onLater={() => {
-                  const to = neighbour(state, current, 1)
-                  if (to) go(to)
-                }}
-                onGo={go}
-                onExample={loadExample}
-              />
-            ) : (
-              <Expert />
-            )}
-          </main>
-          {/* Nell'ultimo passo il markup è già al centro della pagina: il pannello sarebbe un doppione. */}
-          {!(mode === 'wizard' && current === 'markup') && (
-            <Preview json={json} open={previewOpen} onToggle={() => setPreviewOpen(!previewOpen)} sheetOpen={sheetOpen} onSheet={setSheetOpen} />
-          )}
-        </div>
-        <footer class="footer">{t('app.footer')}</footer>
-      </div>
+        </ActiveContext.Provider>
+      </MarksContext.Provider>
     </FormContext.Provider>
   )
 }

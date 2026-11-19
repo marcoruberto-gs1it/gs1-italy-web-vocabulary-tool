@@ -1,4 +1,4 @@
-/** Punteggio AI-readiness: quanto il markup aiuta motori di ricerca e agenti AI a capire il prodotto o la sede. */
+/** Punteggio AI-readiness: quanto il markup rende il prodotto o la sede comprensibile dalle macchine. */
 import { checkGln, checkGtin } from './gs1'
 import type { State } from './state'
 import { hasOffer, type StepId } from './steps'

@@ -4,6 +4,7 @@ import { useId, useState } from 'preact/hooks'
 import { useForm } from '../form'
 import { t, type MessageKey } from '../i18n'
 import type { StepId } from '../model/steps'
+import { Mark } from '../plates/marks'
 
 export type Control = {
   id: string
@@ -48,6 +49,7 @@ export function Field({ id, step, label, hint, help, term, required, valid, grou
     <Wrapper class={`field ${error ? 'has-error' : ''}`} data-field={id}>
       <div class="field-head">
         <Label class="field-label" {...(group ? {} : { for: id })}>
+          <Mark id={id} />
           {label}
         </Label>
         {required && <span class="req">{t('nav.required')}</span>}

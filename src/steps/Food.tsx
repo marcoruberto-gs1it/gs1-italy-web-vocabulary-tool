@@ -3,6 +3,7 @@ import { useForm, product } from '../form'
 import { t, tk } from '../i18n'
 import { EU_ALLERGENS } from '../mapping'
 import type { Containment, NutrientKey } from '../model/state'
+import { Mark } from '../plates/marks'
 import { LangField } from './Product'
 
 const LEVELS: Containment[] = ['CONTAINS', 'MAY_CONTAIN', 'FREE_FROM', '']
@@ -24,7 +25,10 @@ function Allergens() {
   const set = (code: string, level: Containment) => update(product({ allergens: { ...s.product.allergens, [code]: level } }))
   return (
     <fieldset class="field" id="allergens">
-      <legend class="field-label">{t('field.allergens')}</legend>
+      <legend class="field-label">
+        <Mark id="allergens" />
+        {t('field.allergens')}
+      </legend>
       <p class="hint">{t('allergen.regulation')}</p>
       <div class="table-wrap">
         <table class="grid allergens">
@@ -86,7 +90,10 @@ function Nutrition() {
   const messages = issues.filter((i) => i.field.startsWith('nutrient-') && shows(i.field, 'food'))
   return (
     <fieldset class="field" id="nutrition">
-      <legend class="field-label">{t('field.nutrition')}</legend>
+      <legend class="field-label">
+        <Mark id="nutrition" />
+        {t('field.nutrition')}
+      </legend>
       <div class="segmented" role="radiogroup" aria-label={t('nutrition.basis')}>
         <span class="segmented-label">{t('nutrition.basis')}</span>
         {(['GRM', 'MLT'] as const).map((b) => (

@@ -5,6 +5,7 @@ import { product, useForm } from '../form'
 import { t } from '../i18n'
 import type { Material } from '../model/state'
 import { toNumber } from '../model/validate'
+import { Mark } from '../plates/marks'
 import { LangField } from './Product'
 
 export function Wearable() {
@@ -18,7 +19,10 @@ export function Wearable() {
   return (
     <>
       <fieldset class="field" id="materials">
-        <legend class="field-label">{t('field.materials')}</legend>
+        <legend class="field-label">
+          <Mark id="materials" />
+          {t('field.materials')}
+        </legend>
         <p class="hint">{t('help.materials')}</p>
         <ol class="materials">
           {p.materials.map((m, i) => (
