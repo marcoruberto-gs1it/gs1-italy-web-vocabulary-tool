@@ -52,12 +52,23 @@ Le scelte principali, verificate sul vocabolario 1.18:
 | `src/model/` | Logica senza interfaccia: stato, passi del wizard, controlli, JSON-LD, punteggio, esempi, chiavi GS1 |
 | `src/steps/` | I campi di ciascun passo, usati sia dal wizard sia dalla modalità esperto |
 | `src/views/` | Wizard, modalità esperto, barra dei passi, anteprima JSON-LD |
-| `src/components/` | Campo con etichetta, aiuto e messaggi; controlli del form; JSON colorato; copia |
+| `src/components/` | Campo con etichetta, aiuto e messaggi; controlli del form; JSON colorato; copia; illustrazioni SVG; lettore Lottie |
+| `src/lottie/` | Animazioni Lottie in formato Bodymovin, con il loro test |
+| `src/motion.ts` | GSAP e rispetto del movimento ridotto |
 | `src/i18n/messages.ts` | Tutti i testi, in italiano e in inglese |
 | `src/test/vocab.ts` | Controlli di domain e range usati dai test |
 | `docs/screenshots/` | Schermate di ogni passo, della modalità esperto e della vista mobile |
 
-Stack: Vite, TypeScript e Preact. Preact ha la stessa API a componenti di React in circa 4 KB: la build intera pesa circa 38 KB compressi. Nessuna libreria di interfaccia: componenti e CSS scritti a mano.
+Stack: Vite, TypeScript e Preact, con GSAP per il movimento e Lottie (`lottie-web`, build *light*) per le animazioni di conferma. Preact ha la stessa API a componenti di React in circa 4 KB. La build pesa circa 70 KB compressi; Lottie (circa 47 KB) si carica a parte, solo quando serve. Nessuna libreria di interfaccia: componenti e CSS scritti a mano.
+
+## Stile e animazioni
+
+L'interfaccia segue lo stile dell'app [Verified by GS1](https://marcoruberto-gs1it.github.io/gs1-italy-vbg-app/) di GS1 Italy: fondo azzurro chiaro, card bianche arrotondate con ombre morbide, pulsanti a pillola, illustrazioni SVG con la palette GS1 Italy.
+
+- **GSAP** (`src/motion.ts`): una sequenza d'apertura nel benvenuto, con l'illustrazione che si compone; l'entrata dei contenuti a ogni cambio di passo; il passo attivo nella barra; il punteggio AI-readiness che conta fino al valore e la barra che si riempie.
+- **Lottie** (`src/lottie/animations.ts`): due animazioni costruite nel codice, non esportate da un editor. Il disco verde con la spunta accompagna il markup pronto e il punteggio pieno; la spunta piccola conferma "Copiato".
+- **Movimento ridotto**: con `prefers-reduced-motion` GSAP non parte e Lottie mostra subito l'ultimo fotogramma.
+- **Arancio** solo per l'azione principale di ogni schermata: le illustrazioni usano blu, azzurro e teal.
 
 ## Verifiche
 
@@ -69,6 +80,7 @@ Stack: Vite, TypeScript e Preact. Preact ha la stessa API a componenti di React 
 - domain e range di ogni proprietà `gs1:` nel JSON-LD generato dai due esempi e dal percorso della sede;
 - espansione con `jsonld.js` degli stessi tre documenti: nessun errore, e ogni termine risolve su `https://ref.gs1.org/voc/` o `https://schema.org/`;
 - contrasti dei colori WCAG 2.1 AA, letti da `src/index.css`;
+- validità delle animazioni Lottie e uso dei soli colori GS1 Italy;
 - completezza delle traduzioni e coerenza delle variabili.
 
 Verificati a mano nel browser (Edge, schermate in `docs/screenshots/`): ogni passo del wizard, la modalità esperto, la vista mobile a 390 px senza scroll orizzontale, la navigazione solo da tastiera (ordine del focus, focus visibile, frecce sui radio, Invio per "Avanti").

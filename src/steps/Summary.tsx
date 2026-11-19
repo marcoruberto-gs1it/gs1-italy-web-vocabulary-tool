@@ -1,5 +1,9 @@
 /** Riepilogo: tutti i dati raggruppati per passo, ciascuno con "Modifica", e il punteggio AI-readiness. */
+import { useLayoutEffect, useRef } from 'preact/hooks'
+import { Lottie } from '../components/Lottie'
 import { useForm } from '../form'
+import { success } from '../lottie/animations'
+import { gsap, reducedMotion } from '../motion'
 import { countryName, t, tk } from '../i18n'
 import { EU_ALLERGENS } from '../mapping'
 import { checklist, score, type CheckId } from '../model/score'
@@ -159,16 +163,58 @@ export function Score() {
   const value = score(list)
   const missing = list.filter((c) => !c.ok)
   const done = list.filter((c) => c.ok)
+
+  // Il numero conta fino al punteggio e la barra si riempie: dal valore precedente, o da zero all'apertura.
+  const num = useRef<HTMLSpanElement>(null)
+  const bar = useRef<HTMLSpanElement>(null)
+  const shown = useRef(0)
+  useLayoutEffect(() => {
+    if (reducedMotion() || !num.current || !bar.current) {
+      shown.current = value
+      return
+    }
+    const from = { v: shown.current }
+    num.current.textContent = String(from.v)
+    const tween = gsap.to(from, {
+      v: value,
+      duration: 0.9,
+      ease: 'power2.out',
+      onUpdate: () => {
+        if (num.current) num.current.textContent = String(Math.round(from.v))
+      },
+      onComplete: () => {
+        shown.current = value
+      },
+    })
+    const fill = gsap.fromTo(bar.current, { width: `${shown.current}%` }, { width: `${value}%`, duration: 0.9, ease: 'power2.out' })
+    return () => {
+      shown.current = Math.round(from.v)
+      tween.kill()
+      fill.kill()
+    }
+  }, [value])
+
+  const level = value >= 80 ? 'high' : value >= 50 ? 'mid' : 'low'
   return (
-    <section class="score" aria-labelledby="score-title">
+    <section class={`score score-${level}`} aria-labelledby="score-title">
       <div class="score-head">
-        <h2 id="score-title">{t('score.title')}</h2>
-        <span class="score-value">{t('score.value', { score: value })}</span>
+        <div>
+          <h2 id="score-title">{t('score.title')}</h2>
+          <p class="hint">{s.subject === 'location' ? t('score.introLocation') : t('score.intro')}</p>
+        </div>
+        <span class="score-value" aria-label={t('score.value', { score: value })}>
+          {value === 100 && <Lottie data={success} size={44} class="score-badge" delay={500} />}
+          <span class="score-num" ref={num} aria-hidden="true">
+            {value}
+          </span>
+          <span class="score-of" aria-hidden="true">
+            {t('score.of')}
+          </span>
+        </span>
       </div>
       <div class="meter" role="meter" aria-labelledby="score-title" aria-valuemin={0} aria-valuemax={100} aria-valuenow={value}>
-        <span style={{ width: `${value}%` }} />
+        <span ref={bar} style={{ width: `${value}%` }} />
       </div>
-      <p class="hint">{s.subject === 'location' ? t('score.introLocation') : t('score.intro')}</p>
       {missing.length ? (
         <>
           <h3>{t('score.missing')}</h3>

@@ -42,6 +42,15 @@ const TEXT: [string, string, string][] = [
   ['chiavi schema.org nel JSON', 'teal-ink', 'white'],
   ['riga JSON evidenziata', 'teal-ink', 'teal-tint'],
   ['stringhe nel JSON', '#5c3b00', 'white'],
+  ['stringhe nel JSON su fondo campo', '#5c3b00', 'field'],
+  ['testo nei campi', 'strong', 'field'],
+  ['testo secondario su fondo pagina', 'muted', 'bg'],
+  ['titoli su fondo pagina', 'blue', 'bg'],
+  ['seconda riga del titolo di benvenuto', 'teal-ink', 'white'],
+  ['esempio su card blu', 'white', 'blue'],
+  ['link nella card blu', 'sky', 'blue'],
+  ['conferma "Copiato"', 'green-ink', 'white'],
+  ['markup pronto', 'green-ink', 'green-tint'],
 ]
 
 /** Bordi dei campi e indicatori: almeno 3:1 (WCAG 1.4.11). */
@@ -49,6 +58,8 @@ const UI: [string, string, string][] = [
   ['bordo dei campi', 'line-input', 'white'],
   ['bordo dei campi in errore', 'error', 'white'],
   ['focus', 'blue', 'white'],
+  ['bordo dei campi su fondo campo', 'line-input', 'field'],
+  ['barra del punteggio', 'blue-2', 'white'],
 ]
 
 describe('contrasti WCAG 2.1 AA', () => {

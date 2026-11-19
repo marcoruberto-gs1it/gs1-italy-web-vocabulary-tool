@@ -9,6 +9,7 @@ import { Markup } from '../steps/Markup'
 import { Summary } from '../steps/Summary'
 import { Welcome } from '../steps/Welcome'
 import { Stepper } from './Stepper'
+import { gsap, useGsap } from '../motion'
 
 type Props = {
   step: StepId
@@ -41,24 +42,49 @@ export function Wizard({ step, visited, blocked, onNext, onBack, onLater, onGo, 
     if (!document.activeElement || document.activeElement === document.body || document.activeElement.closest('.wizard-nav, .stepper')) heading.current?.focus()
   }, [step])
 
-  const primary = step === 'welcome' ? t('nav.start') : step === 'summary' ? t('nav.create') : t('nav.next')
+  // Cambio di passo: il contenuto entra dal basso, un blocco dopo l'altro. Il benvenuto ha la sua sequenza.
+  const main = useRef<HTMLFormElement>(null)
+  useGsap(
+    main,
+    () => {
+      if (step === 'welcome') return
+      gsap.from('.step-head > *, .step-body > *', { y: 16, opacity: 0, duration: 0.45, stagger: 0.045, ease: 'power3.out', clearProps: 'transform,opacity' })
+    },
+    [step],
+  )
+
+  const primary = step === 'summary' ? t('nav.create') : t('nav.next')
+  const title =
+    step === 'welcome' ? (
+      <h1 ref={heading} tabIndex={-1} class="hero-title">
+        <span>{t('welcome.heading1')}</span> <span class="hero-title-2">{t('welcome.heading2')}</span>
+      </h1>
+    ) : (
+      <h1 ref={heading} tabIndex={-1}>
+        {tk(`step.${step}`)}
+      </h1>
+    )
   return (
     <div class="wizard">
       <Stepper steps={steps} current={step} visited={visited} onGo={onGo} />
       <form
-        class="wizard-main"
+        ref={main}
+        class={`wizard-main ${step === 'welcome' ? 'is-welcome' : ''}`}
         noValidate
         onSubmit={(e) => {
           e.preventDefault()
           onNext()
         }}
       >
-        <h1 ref={heading} tabIndex={-1}>
-          {step === 'welcome' ? t('welcome.heading') : tk(`step.${step}`)}
-        </h1>
-        {intro && <p class="intro">{t(intro)}</p>}
+        {step === 'welcome' ? (
+          <Welcome heading={title} onExample={onExample} />
+        ) : (
+          <div class="step-head">
+            {title}
+            {intro && <p class="intro">{t(intro)}</p>}
+          </div>
+        )}
         <div class="step-body">
-          {step === 'welcome' && <Welcome onExample={onExample} />}
           {Fields && <Fields />}
           {step === 'summary' && <Summary />}
           {step === 'markup' && <Markup />}
@@ -77,6 +103,7 @@ export function Wizard({ step, visited, blocked, onNext, onBack, onLater, onGo, 
             </ul>
           </div>
         )}
+        {step !== 'welcome' && (
         <div class="wizard-nav">
           {index > 0 && (
             <button type="button" class="btn-secondary" onClick={onBack}>
@@ -95,6 +122,7 @@ export function Wizard({ step, visited, blocked, onNext, onBack, onLater, onGo, 
             </button>
           )}
         </div>
+        )}
       </form>
     </div>
   )

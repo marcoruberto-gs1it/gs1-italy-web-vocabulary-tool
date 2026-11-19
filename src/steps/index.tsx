@@ -38,5 +38,4 @@ export const STEP_INTRO: Partial<Record<StepId, MessageKey>> = {
   company: 'company.intro',
   location: 'location.intro',
   summary: 'summary.intro',
-  markup: 'markup.intro',
 }

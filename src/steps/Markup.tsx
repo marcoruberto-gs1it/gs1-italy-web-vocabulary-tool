@@ -1,6 +1,8 @@
 /** Il markup finale: copia, download, istruzioni per l'inserimento e strumenti di verifica. */
 import { CopyButton } from '../components/CopyButton'
 import { JsonCode } from '../components/JsonCode'
+import { Lottie } from '../components/Lottie'
+import { success } from '../lottie/animations'
 import { useForm } from '../form'
 import { t } from '../i18n'
 import { buildJsonLd, toJson, toScript } from '../model/jsonld'
@@ -41,9 +43,19 @@ export function MarkupActions({ primary = true }: { primary?: boolean }) {
 }
 
 export function Markup() {
-  const { state } = useForm()
+  const { state, issues } = useForm()
+  const ready = !issues.some((i) => i.level === 'error')
   return (
     <div class="markup">
+      {ready && (
+        <div class="ready-card">
+          <Lottie data={success} size={72} delay={250} />
+          <div>
+            <h2>{t('markup.ready')}</h2>
+            <p>{t('markup.readyNote')}</p>
+          </div>
+        </div>
+      )}
       <MarkupActions />
       <JsonCode json={toJson(buildJsonLd(state))} label={t('markup.code')} />
       <section aria-labelledby="howto">

@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'preact/hooks'
 import { t } from '../i18n'
+import { copied } from '../lottie/animations'
+import { Lottie } from './Lottie'
 
 /** Copia un testo negli appunti; per 2 secondi mostra "Copiato". Se il browser non lo permette, lo dice. */
 export function CopyButton({ text, label, primary }: { text: () => string; label: string; primary?: boolean }) {
@@ -16,8 +18,15 @@ export function CopyButton({ text, label, primary }: { text: () => string; label
       .catch(() => setState('failed')) ?? setState('failed')
   return (
     <span class="copy">
-      <button type="button" class={primary ? 'btn-primary' : 'btn-secondary'} onClick={copy}>
-        {state === 'done' ? t('markup.copied') : label}
+      <button type="button" class={`${primary ? 'btn-primary' : 'btn-secondary'} ${state === 'done' ? 'is-done' : ''}`} onClick={copy}>
+        {state === 'done' ? (
+          <>
+            <Lottie data={copied} size={20} class="on-button" />
+            {t('markup.copied')}
+          </>
+        ) : (
+          label
+        )}
       </button>
       <span class="sr-only" aria-live="polite">
         {state === 'done' ? t('markup.copied') : ''}

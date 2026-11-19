@@ -42,7 +42,8 @@ export const it = {
   'step.summary': 'Riepilogo',
   'step.markup': 'Il tuo markup',
 
-  'welcome.heading': 'Crea il markup GS1 per la tua pagina',
+  'welcome.heading1': 'Crea il markup GS1',
+  'welcome.heading2': 'per la tua pagina',
   'welcome.line1': 'Questo strumento ti guida nella creazione del markup JSON-LD per la pagina di un prodotto o di una sede aziendale.',
   'welcome.line2': 'Il markup usa il GS1 Web Vocabulary insieme a schema.org: motori di ricerca e agenti AI leggono i tuoi dati senza doverli interpretare.',
   'welcome.line3': 'Alla fine copi il codice e lo incolli nella pagina.',
@@ -51,7 +52,11 @@ export const it = {
   'welcome.need2': 'i testi della pagina: nome, descrizione, ingredienti o materiali',
   'welcome.need3': 'l’indirizzo web dell’immagine del prodotto e della pagina',
   'welcome.privacy': 'I dati restano nel tuo browser: lo strumento non invia niente a GS1 Italy o ad altri.',
-  'welcome.examples': 'Vuoi vedere un risultato completo? Parti da un esempio:',
+  'welcome.examplesTitle': 'Parti da un esempio',
+  'welcome.examples': 'Vuoi vedere un risultato completo? Gli esempi usano aziende e brand di fantasia.',
+  'welcome.biscuitsDetail': 'Alimentare, dal punto di vista del produttore: allergeni e valori nutrizionali.',
+  'welcome.jacketDetail': 'Abbigliamento venduto online: materiali, taglia e prezzo.',
+  'welcome.open': 'Apri l’esempio',
   'welcome.biscuits': 'Biscotti',
   'welcome.jacket': 'Giacca in denim',
 
@@ -286,6 +291,7 @@ export const it = {
 
   'score.title': 'AI-readiness',
   'score.value': '{score} su 100',
+  'score.of': 'su 100',
   'score.intro': 'Quanto il markup aiuta motori di ricerca e agenti AI a capire il tuo prodotto.',
   'score.introLocation': 'Quanto il markup aiuta motori di ricerca e agenti AI a trovare la tua sede.',
   'score.complete': 'Tutti i dati chiave sono presenti.',
@@ -337,7 +343,8 @@ export const it = {
   'why.address': 'Mappe e assistenti possono indicare la strada solo con un indirizzo completo.',
   'why.locationUrl': 'Collega il markup alla pagina ufficiale della sede.',
 
-  'markup.intro': 'Il markup è pronto. Copialo e incollalo nella pagina.',
+  'markup.ready': 'Il markup è pronto',
+  'markup.readyNote': 'Copialo e incollalo nella pagina. Sotto trovi il codice, dove inserirlo e come verificarlo.',
   'markup.copy': 'Copia JSON-LD',
   'markup.copyScript': 'Copia come <script>',
   'markup.download': 'Scarica .jsonld',
@@ -410,7 +417,8 @@ export const en: Record<MessageKey, string> = {
   'step.summary': 'Summary',
   'step.markup': 'Your markup',
 
-  'welcome.heading': 'Create the GS1 markup for your page',
+  'welcome.heading1': 'Create the GS1 markup',
+  'welcome.heading2': 'for your page',
   'welcome.line1': 'This tool guides you through creating the JSON-LD markup for a product page or a company location page.',
   'welcome.line2': 'The markup uses the GS1 Web Vocabulary together with schema.org, so search engines and AI agents read your data without having to interpret it.',
   'welcome.line3': 'At the end you copy the code and paste it into the page.',
@@ -419,7 +427,11 @@ export const en: Record<MessageKey, string> = {
   'welcome.need2': 'the page texts: name, description, ingredients or materials',
   'welcome.need3': 'the web address of the product image and of the page',
   'welcome.privacy': 'Your data stays in your browser: the tool sends nothing to GS1 Italy or anyone else.',
-  'welcome.examples': 'Want to see a complete result? Start from an example:',
+  'welcome.examplesTitle': 'Start from an example',
+  'welcome.examples': 'Want to see a complete result? The examples use fictional companies and brands.',
+  'welcome.biscuitsDetail': 'Food, from the manufacturer’s point of view: allergens and nutrition facts.',
+  'welcome.jacketDetail': 'Clothing sold online: materials, size and price.',
+  'welcome.open': 'Open the example',
   'welcome.biscuits': 'Biscuits',
   'welcome.jacket': 'Denim jacket',
 
@@ -654,6 +666,7 @@ export const en: Record<MessageKey, string> = {
 
   'score.title': 'AI readiness',
   'score.value': '{score} out of 100',
+  'score.of': 'out of 100',
   'score.intro': 'How much the markup helps search engines and AI agents understand your product.',
   'score.introLocation': 'How much the markup helps search engines and AI agents find your location.',
   'score.complete': 'All the key data is there.',
@@ -705,7 +718,8 @@ export const en: Record<MessageKey, string> = {
   'why.address': 'Maps and assistants can give directions only with a full address.',
   'why.locationUrl': 'It links the markup to the location’s official page.',
 
-  'markup.intro': 'The markup is ready. Copy it and paste it into the page.',
+  'markup.ready': 'Your markup is ready',
+  'markup.readyNote': 'Copy it and paste it into the page. Below you find the code, where to insert it and how to check it.',
   'markup.copy': 'Copy JSON-LD',
   'markup.copyScript': 'Copy as <script>',
   'markup.download': 'Download .jsonld',
