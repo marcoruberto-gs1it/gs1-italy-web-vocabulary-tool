@@ -157,6 +157,9 @@ const CHECK_FIELD: Record<CheckId, string> = {
 }
 
 /** Punteggio AI-readiness con la lista di cosa manca e perché conta. */
+/** Circonferenza dell'anello del punteggio (r = 52). */
+const RING = 2 * Math.PI * 52
+
 export function Score() {
   const { state: s, goTo } = useForm()
   const list = checklist(s)
@@ -166,7 +169,7 @@ export function Score() {
 
   // Il numero conta fino al punteggio e la barra si riempie: dal valore precedente, o da zero all'apertura.
   const num = useRef<HTMLSpanElement>(null)
-  const bar = useRef<HTMLSpanElement>(null)
+  const bar = useRef<SVGCircleElement>(null)
   const shown = useRef(0)
   useLayoutEffect(() => {
     if (reducedMotion() || !num.current || !bar.current) {
@@ -186,7 +189,7 @@ export function Score() {
         shown.current = value
       },
     })
-    const fill = gsap.fromTo(bar.current, { width: `${shown.current}%` }, { width: `${value}%`, duration: 0.9, ease: 'power2.out' })
+    const fill = gsap.fromTo(bar.current, { strokeDashoffset: RING * (1 - shown.current / 100) }, { strokeDashoffset: RING * (1 - value / 100), duration: 0.9, ease: 'power2.out' })
     return () => {
       shown.current = Math.round(from.v)
       tween.kill()
@@ -198,22 +201,23 @@ export function Score() {
   return (
     <section class={`score score-${level}`} aria-labelledby="score-title">
       <div class="score-head">
+        <div class="ring" role="meter" aria-labelledby="score-title" aria-valuemin={0} aria-valuemax={100} aria-valuenow={value} aria-valuetext={t('score.value', { score: value })}>
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <circle cx="60" cy="60" r="52" class="ring-track" />
+            <circle ref={bar} cx="60" cy="60" r="52" class="ring-fill" stroke-dasharray={RING} stroke-dashoffset={RING * (1 - value / 100)} transform="rotate(-90 60 60)" />
+          </svg>
+          <span class="ring-label" aria-hidden="true">
+            <span class="score-num" ref={num}>
+              {value}
+            </span>
+            <span class="score-of">{t('score.of')}</span>
+          </span>
+          {value === 100 && <Lottie data={success} size={40} class="score-badge" delay={500} />}
+        </div>
         <div>
           <h2 id="score-title">{t('score.title')}</h2>
           <p class="hint">{s.subject === 'location' ? t('score.introLocation') : t('score.intro')}</p>
         </div>
-        <span class="score-value" aria-label={t('score.value', { score: value })}>
-          {value === 100 && <Lottie data={success} size={44} class="score-badge" delay={500} />}
-          <span class="score-num" ref={num} aria-hidden="true">
-            {value}
-          </span>
-          <span class="score-of" aria-hidden="true">
-            {t('score.of')}
-          </span>
-        </span>
-      </div>
-      <div class="meter" role="meter" aria-labelledby="score-title" aria-valuemin={0} aria-valuemax={100} aria-valuenow={value}>
-        <span ref={bar} style={{ width: `${value}%` }} />
       </div>
       {missing.length ? (
         <>

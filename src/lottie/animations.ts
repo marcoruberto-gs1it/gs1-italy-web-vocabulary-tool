@@ -153,7 +153,7 @@ const flat = (ind: number, name: string, shapes: unknown[], op: number) => ({
   st: 0,
   bm: 0,
 })
-const board = (name: string, op: number, layers: unknown[]) => ({ v: '5.7.4', fr: 60, ip: 0, op, w: W, h: H, nm: name, ddd: 0, assets: [], layers })
+export const board = (name: string, op: number, layers: unknown[], w = W, h = H) => ({ v: '5.7.4', fr: 60, ip: 0, op, w, h, nm: name, ddd: 0, assets: [], layers })
 /** Un gruppo che compare: dissolvenza e un piccolo spostamento da `dx`, `dy`. */
 const appear = (items: unknown[], from: number, dx = 0, dy = 0) => ({
   ty: 'gr',
@@ -319,3 +319,7 @@ export const linked = board('linked', 140, [
     140,
   ),
 ])
+
+/** Gli stessi mattoni, per le animazioni di altri moduli. */
+export { still, anim, transform, stroke, fill, path, trim, rect, ellipse, flat, appear, popIn, rgb, WHITE, GREEN, TEAL, BLUE, BLUE2, SKY }
+export type { Rgb }

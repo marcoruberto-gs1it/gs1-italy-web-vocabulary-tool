@@ -27,6 +27,18 @@ const PLATES: Record<Exclude<TabId, 'welcome'> | 'expert', () => JSX.Element> = 
   expert: GraphPlate,
 }
 
+/** Il colore della card della tavola, diverso per ogni tab come le card del riferimento. */
+const TONE: Record<Exclude<TabId, 'welcome'> | 'expert', string> = {
+  start: 'blue',
+  product: 'peach',
+  details: 'green',
+  sale: 'teal',
+  place: 'blue',
+  check: 'green',
+  markup: 'blue',
+  expert: 'blue',
+}
+
 export function Side({ tab, json }: { tab: Exclude<TabId, 'welcome'> | 'expert'; json: string }) {
   const [view, setView] = useState<'drawing' | 'json'>('drawing')
   const shown = tab === 'markup' ? 'drawing' : view
@@ -37,7 +49,7 @@ export function Side({ tab, json }: { tab: Exclude<TabId, 'welcome'> | 'expert';
     gsap.from('.side-body', { opacity: 0, y: 6, duration: 0.25, ease: 'power2.out', clearProps: 'all' })
   }, [tab, shown])
   return (
-    <aside class="side" aria-label={t('plate.view')} ref={box}>
+    <aside class={`side tone-${TONE[tab]}`} aria-label={t('plate.view')} ref={box}>
       {tab !== 'markup' && (
         <div class="side-switch" role="tablist" aria-label={t('plate.view')}>
           {(['drawing', 'json'] as const).map((v) => (

@@ -48,9 +48,20 @@ const TEXT: [string, string, string][] = [
   ['titoli su fondo pagina', 'blue', 'bg'],
   ['seconda riga del titolo di benvenuto', 'teal-ink', 'white'],
   ['esempio su card blu', 'white', 'blue'],
-  ['link nella card blu', 'sky', 'blue'],
   ['conferma "Copiato"', 'green-ink', 'white'],
   ['markup pronto', 'green-ink', 'green-tint'],
+  ['testo sulle card pesca', 'text', 'tone-peach-b'],
+  ['testo sulle card teal', 'text', 'tone-teal-b'],
+  ['testo sulle card verdi', 'text', 'tone-green-b'],
+  ['testo sulle card azzurre', 'text', 'tone-blue-b'],
+  ['secondario sulle card pesca', 'muted', 'tone-peach-a'],
+  ['titoli sulle card pesca', 'blue', 'tone-peach-b'],
+  ['nota nello stack', 'teal-ink', 'tone-teal-b'],
+  ['pulsante principale diviso', 'on-orange', 'orange'],
+  ['pulsante esempi', 'blue', 'tone-teal-b'],
+  ['etichetta obbligatorio', '#7a2e12', 'peach'],
+  ['tab attivo', 'white', 'blue'],
+  ['punteggio pieno', 'green-ink', 'tone-green-b'],
 ]
 
 /** Bordi dei campi e indicatori: almeno 3:1 (WCAG 1.4.11). */

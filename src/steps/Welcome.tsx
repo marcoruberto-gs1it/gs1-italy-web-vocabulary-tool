@@ -1,157 +1,165 @@
 import type { RefObject } from 'preact'
-import { useState } from 'preact/hooks'
 import { Lottie } from '../components/Lottie'
-import { Twin } from '../components/Twin'
-import { freeText, linked, structured } from '../lottie/animations'
 import { t } from '../i18n'
-import type { Layer } from '../scene/twin'
+import { freeText, linked, structured } from '../lottie/animations'
+import { hero, stackIcons } from '../lottie/home'
 
 type Props = { heading: RefObject<HTMLHeadingElement>; onExample: (name: 'biscuits' | 'denimJacket') => void }
 
-const LAYERS: Layer[] = [1, 2, 3, 4, 5, 6]
+const LAYERS = [1, 2, 3, 4, 5, 6] as const
+/** Il colore di ciascuna card dello stack, a rotazione sulla palette GS1 Italy. */
+const TONES = ['blue', 'teal', 'peach', 'green', 'blue', 'teal'] as const
 
-/** Mini disegni degli esempi: la confezione e la giacca, nello stesso tratto delle tavole. */
-const Pack = () => (
-  <svg viewBox="0 0 48 48" width="48" height="48" aria-hidden="true" class="example-icon">
-    <path d="M34 10l6-4v32l-6 4z" class="pl-side" />
-    <path d="M10 10l6-4h24l-6 4z" class="pl-top" />
-    <rect x="10" y="10" width="24" height="32" class="pl-pack" />
-    <path d="M14 32h1.5v6H14zM17 32h1v6h-1zM19.5 32h2v6h-2zM23 32h1v6h-1zM25.5 32h1.5v6h-1.5zM28.5 32h1v6h-1z" class="bar" />
-    <rect x="14" y="16" width="16" height="4" rx="2" class="pl-sky" />
-  </svg>
-)
-const Jacket = () => (
-  <svg viewBox="0 0 48 48" width="48" height="48" aria-hidden="true" class="example-icon">
-    <path d="M17 6l7 4 7-4 11 6-4 12-4-2v20H14V22l-4 2-4-12z" class="pl-pack" />
-    <path d="M24 10v32" class="pl-ink thin" />
-    <rect x="28" y="28" width="9" height="11" rx="1" class="pl-sky" />
+const Arrow = () => (
+  <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" class="arrow">
+    <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
   </svg>
 )
 
 /**
- * Primo tab, "Da dove partire": il gemello digitale in una scena 3D, lo stack GS1 delle tecnologie
- * online livello per livello, perché serve il web semantico, gli esempi e cosa tenere a portata di mano.
+ * Primo tab, "Da dove partire": la card principale con l'animazione del gemello digitale, lo stack GS1
+ * delle tecnologie online in sei card, cosa vuol dire comprensibile dalle macchine, il perché del web
+ * semantico, gli esempi e cosa tenere a portata di mano.
  */
 export function Welcome({ heading, onExample }: Props) {
-  const [layer, setLayer] = useState<Layer | 0>(0)
   return (
-    <div class="welcome">
-      <div class="welcome-hero">
-        <div class="welcome-copy">
-          <h1 ref={heading} tabIndex={-1} class="welcome-title">
+    <div class="home">
+      <section class="hero card">
+        <div class="hero-copy">
+          <p class="kicker">{t('welcome.kicker')}</p>
+          <h1 ref={heading} tabIndex={-1} class="display">
             {t('welcome.heading')}
           </h1>
           <p class="lead">{t('welcome.line1')}</p>
-          <p>{t('welcome.line2')}</p>
-          <div class="welcome-action">
-            <button type="submit" class="btn-primary">
-              {t('nav.start')}
-            </button>
-            <span class="hint">{t('welcome.line3')}</span>
-          </div>
+          <p class="muted">{t('welcome.line2')}</p>
         </div>
-        <Twin focus={layer} />
-      </div>
-
-      <section class="stack" aria-labelledby="stack-title">
-        <div class="stack-head">
-          <h2 id="stack-title">{t('stack.title')}</h2>
-          <button type="button" class="link-btn" aria-pressed={layer === 0} onClick={() => setLayer(0)}>
-            {t('stack.overview')}
+        <div class="hero-art">
+          <span class="sr-only">{t('hero.label')}</span>
+          <Lottie data={hero} size={[360, 260]} loop stillFrame={240} class="hero-lottie" />
+        </div>
+        <div class="split-cta">
+          <button type="button" class="split-left" onClick={() => document.getElementById('examples')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}>
+            {t('welcome.examplesCta')}
+          </button>
+          <button type="submit" class="split-right">
+            {t('nav.start')} <Arrow />
           </button>
         </div>
-        <p class="hint">{t('stack.intro')}</p>
-        <ol class="stack-list">
-          {LAYERS.map((n) => (
-            <li key={n}>
-              <button type="button" class="stack-item" aria-pressed={layer === n} onClick={() => setLayer(layer === n ? 0 : n)}>
-                <span class="stack-n" aria-hidden="true">
-                  {n}
+      </section>
+
+      <section class="block" aria-labelledby="stack-title">
+        <header class="block-head">
+          <h2 id="stack-title" class="display-s">
+            {t('stack.title')}
+          </h2>
+          <p class="muted">{t('stack.intro')}</p>
+        </header>
+        <ol class="stack-grid">
+          {LAYERS.map((n, i) => (
+            <li key={n} class={`tile tone-${TONES[i]}`}>
+              <div class="tile-top">
+                <span class="tile-n">{n}</span>
+                <Lottie data={stackIcons[i]} size={64} onView delay={i * 80} class="tile-icon" />
+              </div>
+              <h3>{t(`stack.${n}`)}</h3>
+              <p>{t(`stack.${n}.text`)}</p>
+              <p class="tile-foot">
+                <span>
+                  <b>{t('stack.inTool')}:</b> {t(`stack.${n}.tool`)}
                 </span>
-                <span class="stack-text">
-                  <strong>{t(`stack.${n}`)}</strong>
-                  <span>{t(`stack.${n}.text`)}</span>
-                  <span class="stack-tool">
-                    <b>{t('stack.inTool')}:</b> {t(`stack.${n}.tool`)}
-                  </span>
-                </span>
-              </button>
+              </p>
             </li>
           ))}
         </ol>
       </section>
 
-      <section class="machine" aria-labelledby="machine-title">
-        <h2 id="machine-title">{t('machine.title')}</h2>
-        <p>{t('machine.intro')}</p>
-        <ol class="machine-steps">
+      <section class="block card machine" aria-labelledby="machine-title">
+        <header class="block-head">
+          <h2 id="machine-title" class="display-s">
+            {t('machine.title')}
+          </h2>
+          <p class="muted">{t('machine.intro')}</p>
+        </header>
+        <ol class="machine-row">
           {(
             [
-              [freeText, 'machine.text', 'machine.textNote'],
-              [structured, 'machine.data', 'machine.dataNote'],
-              [linked, 'machine.linked', 'machine.linkedNote'],
+              [freeText, 'machine.text', 'machine.textNote', 'peach'],
+              [structured, 'machine.data', 'machine.dataNote', 'blue'],
+              [linked, 'machine.linked', 'machine.linkedNote', 'green'],
             ] as const
-          ).map(([data, title, note]) => (
+          ).map(([data, title, note, tone]) => (
             <li key={title}>
-              <Lottie data={data} size={[200, 140]} onView class="machine-anim" />
+              <div class={`machine-art tone-${tone}`}>
+                <Lottie data={data} size={[200, 140]} onView />
+              </div>
               <h3>{t(title)}</h3>
-              <p class="hint">{t(note)}</p>
+              <p class="muted">{t(note)}</p>
             </li>
           ))}
         </ol>
       </section>
 
-      <section class="why" aria-labelledby="why-title">
-        <h2 id="why-title">{t('why.title')}</h2>
-        <p>{t('why.intro')}</p>
-        <ul class="why-rules">
+      <section class="block why card" aria-labelledby="why-title">
+        <header class="block-head">
+          <h2 id="why-title" class="display-s">
+            {t('why.title')}
+          </h2>
+          <p class="muted">{t('why.intro')}</p>
+        </header>
+        <ol class="why-grid">
           {([1, 2, 3, 4] as const).map((n) => (
-            <li key={n}>{t(`why.rule${n}`)}</li>
+            <li key={n}>
+              <span class="why-n">{n}</span>
+              <p>{t(`why.rule${n}`)}</p>
+            </li>
           ))}
-        </ul>
-        <p class="hint">
+        </ol>
+        <p class="small">
           <a href="https://ref.gs1.org/sme-guidance/online-technologies" target="_blank" rel="noopener noreferrer">
             {t('why.source')}
           </a>
         </p>
       </section>
 
-      <div class="welcome-columns">
-        <section aria-labelledby="examples-title" class="welcome-block">
-          <h2 id="examples-title">{t('welcome.examplesTitle')}</h2>
-          <p class="hint">{t('welcome.examples')}</p>
-          <ul class="examples">
-            <li>
-              <button type="button" class="example" onClick={() => onExample('biscuits')}>
-                <Pack />
-                <span>
-                  <strong>{t('welcome.biscuits')}</strong>
-                  <span class="hint">{t('welcome.biscuitsDetail')}</span>
-                </span>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="example" onClick={() => onExample('denimJacket')}>
-                <Jacket />
-                <span>
-                  <strong>{t('welcome.jacket')}</strong>
-                  <span class="hint">{t('welcome.jacketDetail')}</span>
-                </span>
-              </button>
-            </li>
-          </ul>
-        </section>
+      <section class="block" id="examples" aria-labelledby="examples-title">
+        <header class="block-head">
+          <h2 id="examples-title" class="display-s">
+            {t('welcome.examplesTitle')}
+          </h2>
+          <p class="muted">{t('welcome.examples')}</p>
+        </header>
+        <div class="example-grid">
+          {(
+            [
+              ['biscuits', 'welcome.biscuits', 'welcome.biscuitsDetail', 'peach'],
+              ['denimJacket', 'welcome.jacket', 'welcome.jacketDetail', 'teal'],
+            ] as const
+          ).map(([name, title, detail, tone]) => (
+            <button type="button" key={name} class={`example tile tone-${tone}`} onClick={() => onExample(name)}>
+              <span class="example-title">{t(title)}</span>
+              <span>{t(detail)}</span>
+              <span class="tile-foot">
+                <span>{t('welcome.open')}</span>
+                <Arrow />
+              </span>
+            </button>
+          ))}
+        </div>
+      </section>
 
-        <section aria-labelledby="needs-title" class="welcome-block">
-          <h2 id="needs-title">{t('welcome.needs')}</h2>
-          <ul class="needs">
-            <li>{t('welcome.need1')}</li>
-            <li>{t('welcome.need2')}</li>
-            <li>{t('welcome.need3')}</li>
-          </ul>
-          <p class="notice notice-info">{t('welcome.privacy')}</p>
-        </section>
-      </div>
+      <section class="block card needs" aria-labelledby="needs-title">
+        <header class="block-head">
+          <h2 id="needs-title" class="display-s">
+            {t('welcome.needs')}
+          </h2>
+        </header>
+        <ul class="needs-list">
+          <li>{t('welcome.need1')}</li>
+          <li>{t('welcome.need2')}</li>
+          <li>{t('welcome.need3')}</li>
+        </ul>
+        <p class="notice notice-info">{t('welcome.privacy')}</p>
+      </section>
     </div>
   )
 }

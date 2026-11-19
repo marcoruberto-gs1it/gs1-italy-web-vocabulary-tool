@@ -54,10 +54,9 @@ Le scelte principali, verificate sul vocabolario 1.18:
 | `src/model/` | Logica senza interfaccia: stato, passi del wizard, controlli, JSON-LD, punteggio, esempi, chiavi GS1 |
 | `src/steps/` | I campi di ciascun passo, usati sia dal wizard sia dalla modalità esperto |
 | `src/views/` | Wizard, modalità esperto, barra dei tab, colonna della tavola e del JSON-LD |
-| `src/components/` | Campo con etichetta, aiuto e messaggi; controlli del form; JSON colorato; copia; lettore Lottie; scena 3D |
+| `src/components/` | Campo con etichetta, aiuto e messaggi; controlli del form; JSON colorato; copia; lettore Lottie |
 | `src/plates/` | Le tavole vettoriali di ogni tab e i richiami numerati |
-| `src/scene/` | La scena three.js del gemello digitale |
-| `src/lottie/` | Animazioni Lottie in formato Bodymovin, con il loro test |
+| `src/lottie/` | Animazioni Lottie in formato Bodymovin (home, stack, macchine, conferme), con il loro test |
 | `src/motion.ts` | GSAP e rispetto del movimento ridotto |
 | `src/model/tabs.ts` | I tab del wizard e i passi che raccolgono |
 | `src/model/barcode.ts` | Codifica EAN-13 per il barcode della tavola |
@@ -65,20 +64,21 @@ Le scelte principali, verificate sul vocabolario 1.18:
 | `src/test/vocab.ts` | Controlli di domain e range usati dai test |
 | `docs/screenshots/` | Schermate di ogni passo, della modalità esperto e della vista mobile |
 
-Stack: Vite, TypeScript e Preact, con GSAP per il movimento, Lottie (`lottie-web`, build *light*) per le animazioni e three.js per la scena del gemello digitale. La build principale pesa circa 80 KB compressi; Lottie (circa 47 KB) e three.js con la scena (circa 142 KB) si caricano a parte, solo quando servono. Nessuna libreria di interfaccia: componenti e CSS scritti a mano.
+Stack: Vite, TypeScript e Preact, con GSAP per il movimento e Lottie (`lottie-web`, build *light*) per le animazioni. Testo in Montserrat (`@fontsource-variable/montserrat`, incluso nella build), lo stesso dell'app Verified by GS1. La build principale pesa circa 85 KB compressi; Lottie (circa 47 KB) si carica a parte, solo quando serve. Nessuna libreria di interfaccia: componenti e CSS scritti a mano.
 
 ## Interfaccia
 
-Una scheda tecnica di prodotto: linguette a cartella in alto, il form su un foglio bianco, a destra la tavola che si compila mentre scrivi.
+Fondo con sfumature leggere nei colori GS1 Italy, card bianche molto arrotondate, card colorate per sezione (azzurro, teal, verde, pesca), controlli a pillola e titoli forti in maiuscolo.
 
-- **Tab**: Da dove partire, Profilo, Prodotto, Dettagli, Vendita e azienda (oppure Sede), Verifica, Markup. I tab non pertinenti alle scelte non compaiono; quelli non ancora raggiunti restano disattivati. Frecce, Home e Fine come nel pattern ARIA dei tab.
-- **Tavole** (`src/plates/`): ogni form ha accanto un'infografica vettoriale con i dati inseriti. Il Digital Link scomposto e l'albero delle classi GS1; la confezione con il barcode EAN-13 calcolato dal GTIN; l'etichetta alimentare o quella del capo; offerta, prodotto e azienda come nodi del markup; la facciata della sede; il grafo del JSON-LD; dove va il markup nella pagina. Un secondo tab mostra il JSON-LD.
+- **Da dove partire**: la card principale con l'animazione del gemello digitale e il pulsante doppio (esempi / inizia); lo stack di GS1 [Online technologies](https://ref.gs1.org/sme-guidance/online-technologies) in sei card, ognuna con la sua icona animata e cosa fa lo strumento; cosa vuol dire comprensibile dalle macchine, in tre animazioni; il perché del web semantico; gli esempi; cosa tenere a portata di mano.
+- **Tab a pillola**: Da dove partire, Profilo, Prodotto, Dettagli, Vendita e azienda (oppure Sede), Verifica, Markup. I tab non pertinenti alle scelte non compaiono; quelli non ancora raggiunti restano disattivati. Frecce, Home e Fine come nel pattern ARIA dei tab.
+- **Tavole** (`src/plates/`): accanto a ogni form, in una card colorata, un'infografica vettoriale con i dati inseriti. Il Digital Link scomposto e l'albero delle classi GS1; la confezione con il barcode EAN-13 calcolato dal GTIN; l'etichetta alimentare o quella del capo; offerta, prodotto e azienda come nodi del markup; la facciata della sede; il grafo del JSON-LD; dove va il markup nella pagina. Un secondo tab mostra il JSON-LD.
 - **Richiami numerati**: lo stesso numero accanto all'etichetta del campo e nel punto della tavola; il richiamo si accende quando il campo ha il focus.
-- **Scena three.js** (`src/scene/twin.ts`): la confezione, il telefono che scansiona il QR, il resolver con il linkset, il pannello JSON-LD, lo schermo dove un programma legge i dati campo per campo. Scegliendo un livello dello stack, la camera va sul pezzo corrispondente. Tutto è costruito nel codice, con texture su canvas; senza WebGL resta la descrizione testuale.
-- **Lottie** (`src/lottie/animations.ts`): animazioni costruite nel codice, non esportate da un editor. Tre spiegano cosa vuol dire comprensibile dalle macchine: testo libero, dati strutturati, dati collegati. Partono quando entrano nello schermo e ripartono al passaggio del puntatore. Le altre confermano il markup pronto, il punteggio pieno e la copia.
-- **GSAP** (`src/motion.ts`): solo movimento che risponde a un'azione, cioè il cambio di tavola e il punteggio che conta fino al valore. Niente entrate in dissolvenza sui blocchi né animazioni continue decorative.
-- **Movimento ridotto**: con `prefers-reduced-motion` GSAP non parte, Lottie mostra l'ultimo fotogramma e la scena 3D resta ferma, con la camera che salta invece di muoversi.
-- **Colori**: blu GS1 dominante, arancio solo per l'azione principale, teal scuro per i dati inseriti, verde per le conferme. Verdana, raggio 4 px, niente ombre o sfumature decorative.
+- **Punteggio**: un anello che si riempie fino al valore, con il colore che cambia con il livello.
+- **Lottie** (`src/lottie/`): tutte le animazioni sono costruite nel codice, non esportate da un editor. L'apertura dell'home gira in loop; le icone dello stack e le tre animazioni sulle macchine partono quando entrano nello schermo e ripartono al passaggio del puntatore; le altre confermano il markup pronto, il punteggio pieno e la copia.
+- **GSAP** (`src/motion.ts`): il cambio di tavola e il punteggio che conta fino al valore.
+- **Movimento ridotto**: con `prefers-reduced-motion` GSAP non parte e Lottie mostra un fotogramma fermo.
+- **Colori**: blu GS1 dominante, arancio solo per l'azione principale, teal scuro per i dati inseriti, verde per le conferme. I contrasti delle card colorate sono nei test.
 
 ## Verifiche
 
@@ -95,7 +95,7 @@ Una scheda tecnica di prodotto: linguette a cartella in alto, il form su un fogl
 - codifica EAN-13: guardie, parità della prima cifra, set L, G e R;
 - completezza delle traduzioni e coerenza delle variabili.
 
-Verificati a mano nel browser (Edge, schermate in `docs/screenshots/`): ogni tab del wizard con la sua tavola, la scena 3D e le animazioni, la modalità esperto, la vista mobile a 390 px senza scroll orizzontale, la navigazione da tastiera tra i tab (frecce).
+Verificati a mano nel browser (Edge, schermate in `docs/screenshots/`): ogni tab del wizard con la sua tavola, le animazioni, la modalità esperto, la vista mobile a 390 px senza scroll orizzontale, la navigazione da tastiera tra i tab (frecce).
 
 ## Limiti noti
 

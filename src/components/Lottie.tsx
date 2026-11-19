@@ -8,9 +8,10 @@ import { useEffect, useRef } from 'preact/hooks'
 import { reducedMotion } from '../motion'
 
 type Anim = { play: () => void; goToAndPlay: (f: number, isFrame: boolean) => void; goToAndStop: (f: number, isFrame: boolean) => void; destroy: () => void; totalFrames: number }
-type Props = { data: object; size: number | [number, number]; class?: string; delay?: number; onView?: boolean }
+/** `loop`: gira di continuo; `stillFrame`: il fotogramma da mostrare con il movimento ridotto (di norma l'ultimo). */
+type Props = { data: object; size: number | [number, number]; class?: string; delay?: number; onView?: boolean; loop?: boolean; stillFrame?: number }
 
-export function Lottie({ data, size, class: cls, delay = 0, onView }: Props) {
+export function Lottie({ data, size, class: cls, delay = 0, onView, loop, stillFrame }: Props) {
   const box = useRef<HTMLSpanElement>(null)
   const anim = useRef<Anim | null>(null)
   useEffect(() => {
@@ -20,10 +21,10 @@ export function Lottie({ data, size, class: cls, delay = 0, onView }: Props) {
     import('lottie-web/build/player/lottie_light').then(({ default: lottie }) => {
       if (destroyed || !box.current) return
       const still = reducedMotion()
-      const a = lottie.loadAnimation({ container: box.current, renderer: 'svg', loop: false, autoplay: false, animationData: structuredClone(data) }) as unknown as Anim
+      const a = lottie.loadAnimation({ container: box.current, renderer: 'svg', loop: !!loop, autoplay: false, animationData: structuredClone(data) }) as unknown as Anim
       anim.current = a
       ;(a as unknown as { addEventListener: (e: string, f: () => void) => void }).addEventListener('DOMLoaded', () => {
-        if (still) return a.goToAndStop(a.totalFrames - 1, true)
+        if (still) return a.goToAndStop(stillFrame ?? a.totalFrames - 1, true)
         const start = () => (timer = setTimeout(() => a.play(), delay))
         if (!onView) return start()
         seen = new IntersectionObserver(([e]) => {
@@ -50,7 +51,7 @@ export function Lottie({ data, size, class: cls, delay = 0, onView }: Props) {
       style={{ width: w, height: h }}
       aria-hidden="true"
       onMouseEnter={() => {
-        if (onView && !reducedMotion()) anim.current?.goToAndPlay(0, true)
+        if (onView && !loop && !reducedMotion()) anim.current?.goToAndPlay(0, true)
       }}
     />
   )
