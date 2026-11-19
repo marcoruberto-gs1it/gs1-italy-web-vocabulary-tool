@@ -77,14 +77,13 @@ Generata da `src/mapping.ts` con `node scripts/mapping-table.mjs`. Ogni termine 
 | Prezzo | `gs1:Offer` → `gs1:priceSpecification` → `gs1:price` | `schema:price` | Il prezzo sta in un nodo gs1:PriceSpecification, con gs1:priceCurrency. |
 | Disponibilità | — | `schema:availability` | Non esiste un termine GS1 per lo stato di disponibilità (gs1:availabilityStarts/Ends sono date). Solo schema.org: InStock, OutOfStock, PreOrder. |
 | URL dell’offerta | — | `schema:url` | Nessun termine GS1 adatto (gs1:offerRedemptionURL serve per riscattare coupon). Solo schema.org. |
-| Venditore (retailer) | `gs1:Offer` → `gs1:seller` → `gs1:organizationName` | `schema:seller` → `schema:name` | gs1:organizationName non ha dominio nel vocabolario: si usa sul nodo gs1:Organization, come indica la sua descrizione. |
 
 ## Azienda
 
 | Campo | Termine GS1 | schema.org | Note |
 |---|---|---|---|
-| Brand owner: nome | `gs1:Product` → `gs1:brandOwner` → `gs1:organizationName` | `schema:manufacturer` → `schema:name` | gs1:brandOwner è sottoproprietà di schema:brand, non di schema:manufacturer: il parallelo schema:manufacturer è una scelta da confermare (vedi note). |
-| Brand owner: GLN | `gs1:Product` → `gs1:brandOwner` → `gs1:partyGLN` | `schema:manufacturer` → `schema:globalLocationNumber` | 13 cifre con cifra di controllo. gs1:partyGLN identifica un’entità legale; gs1:globalLocationNumber non ha dominio. |
+| Brand owner: nome | `gs1:Product` → `gs1:brandOwner` → `gs1:organizationName` | — | Nodo gs1:Organization con @id Digital Link /417/{GLN}. Nessun parallelo schema.org: gs1:brandOwner è sottoproprietà di schema:brand e schema:manufacturer non è un equivalente esatto. |
+| Brand owner: GLN | `gs1:Product` → `gs1:brandOwner` → `gs1:partyGLN` | — | 13 cifre con cifra di controllo. gs1:partyGLN identifica un’entità legale; gs1:globalLocationNumber non ha dominio. |
 
 ## Sede aziendale
 
@@ -97,4 +96,4 @@ Generata da `src/mapping.ts` con `node scripts/mapping-table.mjs`. Ogni termine 
 | Città | `gs1:Place` → `gs1:address` → `gs1:addressLocality` | `schema:address` → `schema:addressLocality` |  |
 | Provincia | `gs1:Place` → `gs1:address` → `gs1:addressRegion` | `schema:address` → `schema:addressRegion` | Sigla (MI). |
 | Paese | `gs1:Place` → `gs1:address` → `gs1:addressCountry` → `gs1:countryCode` | `schema:address` → `schema:addressCountry` | ISO 3166-1 (IT). |
-| URL della sede | `gs1:Place` → `gs1:homepage` | `schema:url` | gs1:homepage è il link type "Organisation Information Page" (dominio owl:Thing). Da confermare (vedi note). |
+| URL della sede | `gs1:Place` → `gs1:homepage` | `schema:url` | gs1:homepage è il link type "Organisation Information Page" (dominio owl:Thing). In parallelo schema:url. |

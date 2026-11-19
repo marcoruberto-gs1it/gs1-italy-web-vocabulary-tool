@@ -126,11 +126,10 @@ export const MAPPING: FieldMapping[] = [
   { id: 'price', step: 'offer', label: 'Prezzo', subject: 'gs1:Offer', path: ['gs1:priceSpecification', 'gs1:price'], range: 'xsd:float', schema: ['schema:price'], notes: 'Il prezzo sta in un nodo gs1:PriceSpecification, con gs1:priceCurrency.' },
   { id: 'availability', step: 'offer', label: 'Disponibilità', subject: 'gs1:Offer', path: [], schema: ['schema:availability'], notes: 'Non esiste un termine GS1 per lo stato di disponibilità (gs1:availabilityStarts/Ends sono date). Solo schema.org: InStock, OutOfStock, PreOrder.' },
   { id: 'offerUrl', step: 'offer', label: 'URL dell’offerta', subject: 'gs1:Offer', path: [], schema: ['schema:url'], notes: 'Nessun termine GS1 adatto (gs1:offerRedemptionURL serve per riscattare coupon). Solo schema.org.' },
-  { id: 'seller', step: 'offer', label: 'Venditore (retailer)', subject: 'gs1:Offer', path: ['gs1:seller', 'gs1:organizationName'], range: 'rdf:langString', schema: ['schema:seller', 'schema:name'], notes: 'gs1:organizationName non ha dominio nel vocabolario: si usa sul nodo gs1:Organization, come indica la sua descrizione.' },
 
   // Azienda
-  { id: 'brandOwnerName', step: 'company', label: 'Brand owner: nome', subject: 'gs1:Product', path: ['gs1:brandOwner', 'gs1:organizationName'], range: 'rdf:langString', schema: ['schema:manufacturer', 'schema:name'], notes: 'gs1:brandOwner è sottoproprietà di schema:brand, non di schema:manufacturer: il parallelo schema:manufacturer è una scelta da confermare (vedi note).' },
-  { id: 'brandOwnerGln', step: 'company', label: 'Brand owner: GLN', subject: 'gs1:Product', path: ['gs1:brandOwner', 'gs1:partyGLN'], range: 'xsd:string', schema: ['schema:manufacturer', 'schema:globalLocationNumber'], notes: '13 cifre con cifra di controllo. gs1:partyGLN identifica un’entità legale; gs1:globalLocationNumber non ha dominio.' },
+  { id: 'brandOwnerName', step: 'company', label: 'Brand owner: nome', subject: 'gs1:Product', path: ['gs1:brandOwner', 'gs1:organizationName'], range: 'rdf:langString', notes: 'Nodo gs1:Organization con @id Digital Link /417/{GLN}. Nessun parallelo schema.org: gs1:brandOwner è sottoproprietà di schema:brand e schema:manufacturer non è un equivalente esatto.' },
+  { id: 'brandOwnerGln', step: 'company', label: 'Brand owner: GLN', subject: 'gs1:Product', path: ['gs1:brandOwner', 'gs1:partyGLN'], range: 'xsd:string', notes: '13 cifre con cifra di controllo. gs1:partyGLN identifica un’entità legale; gs1:globalLocationNumber non ha dominio.' },
 
   // Sede aziendale
   { id: 'locationName', step: 'location', label: 'Nome della sede', subject: 'gs1:Place', path: ['gs1:physicalLocationName'], range: 'rdf:langString', schema: ['schema:name'], notes: '@type ["gs1:Place", "schema:Place"].' },
@@ -140,5 +139,5 @@ export const MAPPING: FieldMapping[] = [
   { id: 'locality', step: 'location', label: 'Città', subject: 'gs1:Place', path: ['gs1:address', 'gs1:addressLocality'], range: 'rdf:langString', schema: ['schema:address', 'schema:addressLocality'], notes: '' },
   { id: 'region', step: 'location', label: 'Provincia', subject: 'gs1:Place', path: ['gs1:address', 'gs1:addressRegion'], range: 'rdf:langString', schema: ['schema:address', 'schema:addressRegion'], notes: 'Sigla (MI).' },
   { id: 'country', step: 'location', label: 'Paese', subject: 'gs1:Place', path: ['gs1:address', 'gs1:addressCountry', 'gs1:countryCode'], range: 'xsd:string', schema: ['schema:address', 'schema:addressCountry'], notes: 'ISO 3166-1 (IT).' },
-  { id: 'locationUrl', step: 'location', label: 'URL della sede', subject: 'gs1:Place', path: ['gs1:homepage'], range: 'xsd:anyURI', schema: ['schema:url'], notes: 'gs1:homepage è il link type "Organisation Information Page" (dominio owl:Thing). Da confermare (vedi note).' },
+  { id: 'locationUrl', step: 'location', label: 'URL della sede', subject: 'gs1:Place', path: ['gs1:homepage'], range: 'xsd:anyURI', schema: ['schema:url'], notes: 'gs1:homepage è il link type "Organisation Information Page" (dominio owl:Thing). In parallelo schema:url.' },
 ]
