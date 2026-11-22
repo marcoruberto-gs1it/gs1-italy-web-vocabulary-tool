@@ -1,24 +1,39 @@
 import type { RefObject } from 'preact'
+import { useEffect, useRef, useState } from 'preact/hooks'
 import { Pict } from '../components/Art'
 import { Lottie } from '../components/Lottie'
-import { t } from '../i18n'
-import { freeText, linked, structured } from '../lottie/animations'
-import { hero, stackIcons } from '../lottie/home'
+import { Term } from '../components/Term'
+import { t, tk } from '../i18n'
+import { stackIcons } from '../lottie/home'
 import type { EXAMPLES } from '../model/examples'
+import { gsap, reducedMotion, useGsap } from '../motion'
 
 type Props = { heading: RefObject<HTMLHeadingElement>; onExample: (name: keyof typeof EXAMPLES) => void }
 
-/**
- * Le sei tappe del percorso, come in "GS1 online technologies: how they fit together": per ognuna
- * il dato che passa alla tappa successiva, scritto com'è davvero.
- */
+/** Lo stesso prodotto, come lo legge una macchina: termine GS1 e valore. */
+const MACHINE: [string, string][] = [
+  ['gs1:gtin', '08001234000011'],
+  ['gs1:productName', 'Biscotti al cacao'],
+  ['gs1:brand', 'Dolce Prova'],
+  ['gs1:netContent', '250 GRM'],
+  ['gs1:hasAllergen', 'MILK, EGGS, CEREALS'],
+  ['gs1:brandOwner', '/417/8001234000004'],
+]
+
+/** Il dato che passa da una tappa all'altra del percorso, scritto com'è davvero. */
 const ROUTE = [
-  { n: 1, token: 'GTIN 08001234000011', tone: 'blue' },
-  { n: 2, token: 'id.gs1.org/01/08001234000011', tone: 'teal' },
-  { n: 3, token: '307 Redirect', tone: 'orange' },
-  { n: 4, token: 'gs1:pip  gs1:instructions', tone: 'green' },
-  { n: 5, token: '"gs1:productName": …', tone: 'blue' },
-  { n: 6, token: '{ … } ✓', tone: 'teal' },
+  { n: 1, token: 'GTIN 08001234000011' },
+  { n: 2, token: 'id.gs1.org/01/08001234000011' },
+  { n: 3, token: '307 → /prodotti/biscotti-cacao' },
+  { n: 4, token: 'gs1:pip  gs1:instructions' },
+  { n: 5, token: '"gs1:productName": "Biscotti al cacao"' },
+  { n: 6, token: '✓ gs1:gtin  ✓ gs1:netContent  ✓ gs1:hasAllergen' },
+] as const
+
+const EX = [
+  ['biscuits', 'welcome.biscuits', 'orange', 'biscotti-cacao.svg'],
+  ['denimJacket', 'welcome.jacket', 'teal', 'giacca-denim.svg'],
+  ['office', 'welcome.office', 'green', 'sede-milano.svg'],
 ] as const
 
 const Arrow = () => (
@@ -26,138 +41,196 @@ const Arrow = () => (
     <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
   </svg>
 )
+const Check = () => (
+  <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" class="twin-check">
+    <circle cx="8" cy="8" r="8" />
+    <path d="M4.5 8.3l2.3 2.3 4.7-5" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+)
 
 /**
- * Primo tab, "Da dove partire": la card principale con l'animazione del gemello digitale, lo stack GS1
- * come percorso, cosa vuol dire comprensibile dalle macchine, il perché del web semantico, gli esempi
- * e cosa tenere a portata di mano. Ogni testo ha la sua immagine.
+ * Il gemello digitale in un gesto: lo stesso prodotto come lo vede una persona (la confezione) e come
+ * lo legge una macchina (termini GS1 e valori). La prima volta l'interruttore scatta da solo, una volta.
+ */
+function TwinSwitch() {
+  const [view, setView] = useState<'human' | 'machine'>('human')
+  const stage = useRef<HTMLDivElement>(null)
+  const touched = useRef(false)
+  useEffect(() => {
+    if (reducedMotion()) return
+    const id = setTimeout(() => !touched.current && setView('machine'), 2600)
+    return () => clearTimeout(id)
+  }, [])
+  useGsap(
+    stage,
+    () => {
+      if (view === 'machine') {
+        gsap.from('.twin-row', { x: -24, opacity: 0, duration: 0.45, stagger: 0.08, ease: 'power3.out' })
+        gsap.from('.twin-check', { scale: 0, duration: 0.35, stagger: 0.08, delay: 0.3, ease: 'back.out(3)' })
+      } else gsap.from('.twin-photo', { scale: 0.92, opacity: 0, duration: 0.5, ease: 'power3.out' })
+    },
+    [view],
+  )
+  const pick = (v: 'human' | 'machine') => {
+    touched.current = true
+    setView(v)
+  }
+  return (
+    <div class="twin">
+      <div class="segmented twin-toggle" role="group" aria-label={t('twin.view')}>
+        <button type="button" aria-pressed={view === 'human'} onClick={() => pick('human')}>
+          {t('twin.human')}
+        </button>
+        <button type="button" aria-pressed={view === 'machine'} onClick={() => pick('machine')}>
+          {t('twin.machine')}
+        </button>
+      </div>
+      <div class={`twin-stage ${view}`} ref={stage} aria-live="polite">
+        {view === 'human' ? (
+          <img class="twin-photo" src="examples/biscotti-cacao.svg" alt={t('twin.humanAlt')} width={800} height={600} />
+        ) : (
+          <ul class="twin-data">
+            {MACHINE.map(([term, value]) => (
+              <li key={term} class="twin-row">
+                <Term t={term} />
+                <span class="twin-value">{value}</span>
+                <Check />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Il percorso GS1 in sei tappe. Ogni tappa è un tab: si sceglie con un clic o con le frecce, e sotto
+ * compaiono una riga e il dato che passa di lì. "Segui il percorso" lo fa scorrere da solo.
+ */
+function Route() {
+  const [stop, setStop] = useState(0)
+  const [playing, setPlaying] = useState(false)
+  const box = useRef<HTMLDivElement>(null)
+  const timer = useRef<ReturnType<typeof setTimeout>>()
+  useEffect(() => () => clearTimeout(timer.current), [])
+  // La linea si riempie fino alla tappa scelta, e il dettaglio entra.
+  useGsap(
+    box,
+    () => {
+      gsap.to('.route-fill', { width: `${(stop / (ROUTE.length - 1)) * 100}%`, duration: 0.6, ease: 'power2.inOut' })
+      gsap.from('.route-detail > *', { y: 10, opacity: 0, duration: 0.35, stagger: 0.06, ease: 'power2.out' })
+    },
+    [stop],
+  )
+  const play = () => {
+    clearTimeout(timer.current)
+    setPlaying(true)
+    const step = (i: number) => {
+      setStop(i)
+      if (i < ROUTE.length - 1) timer.current = setTimeout(() => step(i + 1), reducedMotion() ? 600 : 1500)
+      else setPlaying(false)
+    }
+    step(0)
+  }
+  const key = (e: KeyboardEvent) => {
+    const next = e.key === 'ArrowRight' ? stop + 1 : e.key === 'ArrowLeft' ? stop - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? ROUTE.length - 1 : null
+    if (next === null || next < 0 || next >= ROUTE.length) return
+    e.preventDefault()
+    setStop(next)
+    requestAnimationFrame(() => box.current?.querySelector<HTMLElement>(`#stop-${next}`)?.focus())
+  }
+  const r = ROUTE[stop]
+  return (
+    <div class="route-box" ref={box}>
+      <div class="route-track" aria-hidden="true">
+        <span class="route-fill" style={{ width: `${(stop / (ROUTE.length - 1)) * 100}%` }} />
+      </div>
+      <div class="route" role="tablist" aria-label={t('route.title')} onKeyDown={key}>
+        {ROUTE.map((x, i) => (
+          <button
+            key={x.n}
+            id={`stop-${i}`}
+            type="button"
+            role="tab"
+            class={`stop ${i <= stop ? 'reached' : ''}`}
+            aria-selected={i === stop}
+            aria-controls="route-detail"
+            tabIndex={i === stop ? 0 : -1}
+            onClick={() => {
+              clearTimeout(timer.current)
+              setPlaying(false)
+              setStop(i)
+            }}
+          >
+            <span class="stop-icon">
+              <Lottie data={stackIcons[i]} size={56} onView delay={i * 120} />
+              <span class="stop-n">{x.n}</span>
+            </span>
+            <span class="stop-title">{tk(`stack.${x.n}`)}</span>
+          </button>
+        ))}
+      </div>
+      <div class="route-detail" id="route-detail" role="tabpanel" aria-labelledby={`stop-${stop}`}>
+        <span class="stop-token mono">{r.token}</span>
+        <p class="route-line">{tk(`route.${r.n}`)}</p>
+        <p class="route-tool">
+          <b>{t('stack.inTool')}:</b> {tk(`stack.${r.n}.tool`)}
+        </p>
+      </div>
+      <div class="route-foot">
+        <button type="button" class="btn-secondary btn-small" onClick={play} disabled={playing}>
+          {t('route.play')}
+        </button>
+        <a class="small" href="https://ref.gs1.org/sme-guidance/online-technologies/" target="_blank" rel="noopener noreferrer">
+          {t('why.source')}
+        </a>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Primo tab, "Da dove partire": il gemello digitale da provare con un clic, il percorso GS1 da seguire,
+ * tre esempi da aprire e cosa serve. Poco testo: si capisce guardando e provando.
  */
 export function Welcome({ heading, onExample }: Props) {
   return (
     <div class="home">
       <section class="hero card">
         <div class="hero-copy">
-          <p class="kicker">{t('welcome.kicker')}</p>
           <h1 ref={heading} tabIndex={-1} class="display">
             {t('welcome.heading')}
           </h1>
-          <p class="lead">{t('welcome.line1')}</p>
-          <p class="muted">{t('welcome.line2')}</p>
+          <p class="lead">{t('welcome.sub')}</p>
+          <div class="hero-actions">
+            <button type="submit" class="btn-primary">
+              {t('nav.start')} <Arrow />
+            </button>
+            <button type="button" class="btn-secondary" onClick={() => document.getElementById('examples')?.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' })}>
+              {t('welcome.examplesCta')}
+            </button>
+          </div>
         </div>
-        <div class="hero-art">
-          <span class="sr-only">{t('hero.label')}</span>
-          <Lottie data={hero} size={[360, 260]} loop stillFrame={240} class="hero-lottie" />
-        </div>
-        <div class="split-cta">
-          <button type="button" class="split-left" onClick={() => document.getElementById('examples')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}>
-            {t('welcome.examplesCta')}
-          </button>
-          <button type="submit" class="split-right">
-            {t('nav.start')} <Arrow />
-          </button>
-        </div>
+        <TwinSwitch />
       </section>
 
-      <section class="block card" aria-labelledby="stack-title">
-        <header class="block-head">
-          <h2 id="stack-title" class="display-s">
-            {t('stack.title')}
-          </h2>
-          <p class="muted">{t('stack.intro')}</p>
-        </header>
-        <ol class="route" aria-label={t('route.label')}>
-          {ROUTE.map((r, i) => (
-            <li key={r.n} class={`stop tone-${r.tone}`}>
-              <div class="stop-icon">
-                <Lottie data={stackIcons[i]} size={64} onView delay={i * 120} />
-                <span class="stop-n">{r.n}</span>
-              </div>
-              <span class="stop-token mono">{r.token}</span>
-              <h3>{t(`stack.${r.n}`)}</h3>
-              <p>{t(`stack.${r.n}.text`)}</p>
-              <p class="stop-tool">
-                <b>{t('stack.inTool')}:</b> {t(`stack.${r.n}.tool`)}
-              </p>
-            </li>
-          ))}
-        </ol>
-        <p class="small">
-          <a href="https://ref.gs1.org/sme-guidance/online-technologies/" target="_blank" rel="noopener noreferrer">
-            {t('why.source')}
-          </a>
-        </p>
-      </section>
-
-      <section class="block card machine" aria-labelledby="machine-title">
-        <header class="block-head">
-          <h2 id="machine-title" class="display-s">
-            {t('machine.title')}
-          </h2>
-          <p class="muted">{t('machine.intro')}</p>
-        </header>
-        <ol class="machine-row">
-          {(
-            [
-              [freeText, 'machine.text', 'machine.textNote', 'orange'],
-              [structured, 'machine.data', 'machine.dataNote', 'blue'],
-              [linked, 'machine.linked', 'machine.linkedNote', 'green'],
-            ] as const
-          ).map(([data, title, note, tone]) => (
-            <li key={title}>
-              <div class={`machine-art tone-${tone}`}>
-                <Lottie data={data} size={[200, 140]} onView />
-              </div>
-              <h3>{t(title)}</h3>
-              <p class="muted">{t(note)}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <section class="block why card" aria-labelledby="why-title">
-        <header class="block-head">
-          <h2 id="why-title" class="display-s">
-            {t('why.title')}
-          </h2>
-          <p class="muted">{t('why.intro')}</p>
-        </header>
-        <ol class="why-grid">
-          {(
-            [
-              [1, 'name'],
-              [2, 'open'],
-              [3, 'data'],
-              [4, 'net'],
-            ] as const
-          ).map(([n, pict]) => (
-            <li key={n}>
-              <Pict name={pict} />
-              <p>{t(`why.rule${n}`)}</p>
-            </li>
-          ))}
-        </ol>
+      <section class="block card" aria-labelledby="route-title">
+        <h2 id="route-title" class="display-s">
+          {t('route.title')}
+        </h2>
+        <Route />
       </section>
 
       <section class="block" id="examples" aria-labelledby="examples-title">
-        <header class="block-head">
-          <h2 id="examples-title" class="display-s">
-            {t('welcome.examplesTitle')}
-          </h2>
-          <p class="muted">{t('welcome.examples')}</p>
-        </header>
+        <h2 id="examples-title" class="display-s block-title">
+          {t('welcome.examplesTitle')}
+        </h2>
         <div class="example-grid">
-          {(
-            [
-              ['biscuits', 'welcome.biscuits', 'welcome.biscuitsDetail', 'orange', 'biscotti-cacao.svg'],
-              ['denimJacket', 'welcome.jacket', 'welcome.jacketDetail', 'teal', 'giacca-denim.svg'],
-              ['office', 'welcome.office', 'welcome.officeDetail', 'green', 'sede-milano.svg'],
-            ] as const
-          ).map(([name, title, detail, tone, image]) => (
+          {EX.map(([name, title, tone, image]) => (
             <button type="button" key={name} class={`example tile tone-${tone}`} onClick={() => onExample(name)}>
-              {/* La stessa immagine che l'esempio mette nel campo gs1:image. */}
               <img class="example-art" src={`examples/${image}`} alt="" width={800} height={600} loading="lazy" />
               <span class="example-title">{t(title)}</span>
-              <span>{t(detail)}</span>
               <span class="tile-foot">
                 <span>{t('welcome.open')}</span>
                 <Arrow />
@@ -167,18 +240,16 @@ export function Welcome({ heading, onExample }: Props) {
         </div>
       </section>
 
-      <section class="block card needs" aria-labelledby="needs-title">
-        <header class="block-head">
-          <h2 id="needs-title" class="display-s">
-            {t('welcome.needs')}
-          </h2>
-        </header>
-        <ul class="needs-list">
+      <section class="needs-bar card" aria-labelledby="needs-title">
+        <h2 id="needs-title" class="needs-title">
+          {t('need.title')}
+        </h2>
+        <ul class="needs-chips">
           {(
             [
-              ['barcode', 'welcome.need1'],
-              ['text', 'welcome.need2'],
-              ['image', 'welcome.need3'],
+              ['barcode', 'need.gtin'],
+              ['text', 'need.text'],
+              ['image', 'need.image'],
             ] as const
           ).map(([pict, key]) => (
             <li key={key}>
@@ -187,7 +258,7 @@ export function Welcome({ heading, onExample }: Props) {
             </li>
           ))}
         </ul>
-        <p class="notice notice-info privacy">
+        <p class="privacy">
           <Pict name="lock" />
           <span>{t('welcome.privacy')}</span>
         </p>
