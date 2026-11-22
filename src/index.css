@@ -192,6 +192,21 @@ textarea {
   backdrop-filter: blur(12px);
   box-shadow: var(--shadow-s);
 }
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  padding: 4px 8px 4px 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  transition: opacity var(--ease);
+}
+.brand:hover {
+  opacity: 0.8;
+}
 .logo {
   display: block;
   height: 38px;
@@ -201,6 +216,7 @@ textarea {
   color: var(--blue);
   font-weight: 750;
   padding-left: 20px;
+  margin-left: -20px;
   border-left: 1px solid var(--line);
 }
 .topbar-actions {
@@ -858,7 +874,19 @@ button:hover .arrow {
 }
 .example-art {
   display: block;
-  margin: -6px -8px 4px;
+  width: 100%;
+  height: auto;
+  margin-bottom: 4px;
+  border-radius: var(--r-m);
+}
+.image-preview {
+  display: block;
+  width: 180px;
+  height: auto;
+  margin-top: 4px;
+  border-radius: var(--r-m);
+  border: 1px solid var(--line);
+  background: var(--bg);
 }
 .needs-list {
   list-style: none !important;

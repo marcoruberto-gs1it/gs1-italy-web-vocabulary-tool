@@ -5,7 +5,7 @@
 
 export const it = {
   'app.title': 'Web Vocabulary Tool',
-  'app.logoAlt': 'GS1 Italy',
+  'app.home': 'GS1 Italy, Web Vocabulary Tool: torna a Da dove partire',
   'app.mode': 'Modalità di lavoro',
   'app.wizard': 'Wizard',
   'app.expert': 'Modalità esperto',
@@ -113,6 +113,7 @@ export const it = {
   'field.name': 'Nome del prodotto',
   'field.brand': 'Marca',
   'field.description': 'Descrizione',
+  'field.imagePreview': 'Anteprima dell’immagine indicata',
   'field.image': 'URL dell’immagine',
   'field.gpc': 'Codice GPC (brick)',
   'field.pageUrl': 'URL della pagina prodotto',
@@ -455,7 +456,7 @@ export const it = {
   'ex.name': 'Biscotti al cacao',
   'ex.brand': 'Dolce Prova',
   'ex.description': 'Biscotti frollini al cacao, cotti al forno. Confezione da 250 g.',
-  'ex.image': 'https://www.example.com/img/biscotti-cacao.jpg',
+  'ex.image': 'https://marcoruberto-gs1it.github.io/gs1-italy-web-vocabulary-tool/examples/biscotti-cacao.svg',
   'ex.gpc': '10000161 – Biscotti/Crackers (Ambiente)',
   'ex.pageUrl': 'https://www.example.com/prodotti/biscotti-cacao',
   'ex.netContent': '250 g',
@@ -567,7 +568,7 @@ export type MessageKey = keyof typeof it
 
 export const en: Record<MessageKey, string> = {
   'app.title': 'Web Vocabulary Tool',
-  'app.logoAlt': 'GS1 Italy',
+  'app.home': 'GS1 Italy, Web Vocabulary Tool: back to Where to start',
   'app.mode': 'Working mode',
   'app.wizard': 'Wizard',
   'app.expert': 'Expert mode',
@@ -675,6 +676,7 @@ export const en: Record<MessageKey, string> = {
   'field.name': 'Product name',
   'field.brand': 'Brand',
   'field.description': 'Description',
+  'field.imagePreview': 'Preview of the image given',
   'field.image': 'Image URL',
   'field.gpc': 'GPC code (brick)',
   'field.pageUrl': 'Product page URL',
@@ -1017,7 +1019,7 @@ export const en: Record<MessageKey, string> = {
   'ex.name': 'Cocoa biscuits',
   'ex.brand': 'Dolce Prova',
   'ex.description': 'Baked cocoa shortbread biscuits. 250 g pack.',
-  'ex.image': 'https://www.example.com/img/cocoa-biscuits.jpg',
+  'ex.image': 'https://marcoruberto-gs1it.github.io/gs1-italy-web-vocabulary-tool/examples/biscotti-cacao.svg',
   'ex.gpc': '10000161 – Biscotti/Crackers (Ambiente)',
   'ex.pageUrl': 'https://www.example.com/products/cocoa-biscuits',
   'ex.netContent': '250 g',

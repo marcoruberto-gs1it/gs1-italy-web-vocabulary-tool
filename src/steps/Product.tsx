@@ -4,8 +4,10 @@ import { GpcInput } from '../components/GpcInput'
 import { LangInput, QuantityInput, Select, TextInput } from '../components/inputs'
 import { product, useForm } from '../form'
 import { countryName, t } from '../i18n'
+import { previewSrc } from '../model/examples'
 import { AI, checkGln, checkGtin, digitalLink } from '../model/gs1'
 import { dlDomain, type Availability, type Text } from '../model/state'
+import { isHttps } from '../model/validate'
 
 /** Paesi proposti per l'origine (ISO 3166-1), ordinati per nome nella lingua corrente. */
 export const COUNTRIES = ['IT', 'AT', 'BE', 'BG', 'CY', 'HR', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'IE', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'CZ', 'RO', 'SK', 'SI', 'ES', 'SE', 'HU', 'AL', 'CH', 'GB', 'NO', 'RS', 'TR', 'MA', 'TN', 'EG', 'US', 'CA', 'MX', 'BR', 'AR', 'CL', 'CN', 'IN', 'BD', 'VN', 'TH', 'ID', 'JP', 'KR', 'AU', 'NZ']
@@ -56,7 +58,12 @@ export function Identity() {
       </Field>
       <LangField id="description" step="identity" label={t('field.description')} help="help.description" term="gs1:productDescription" multiline value={p.description} onInput={(description) => update(product({ description }))} />
       <Field id="image" step="identity" label={t('field.image')} hint={t('hint.image')} help="help.image" term="gs1:image">
-        {(c) => <TextInput control={c} type="url" inputMode="url" placeholder="https://" value={p.image} onInput={(image) => update(product({ image }))} />}
+        {(c) => (
+          <>
+            <TextInput control={c} type="url" inputMode="url" placeholder="https://" value={p.image} onInput={(image) => update(product({ image }))} />
+            {isHttps(p.image) && <img class="image-preview" src={previewSrc(p.image)} alt={t('field.imagePreview')} loading="lazy" />}
+          </>
+        )}
       </Field>
       <Field id="gpc" step="identity" label={t('field.gpc')} hint={t('hint.gpc')} help="help.gpc" term="gs1:gpcCategoryCode">
         {(c) => <GpcInput control={c} value={p.gpc} onInput={(gpc) => update(product({ gpc }))} />}

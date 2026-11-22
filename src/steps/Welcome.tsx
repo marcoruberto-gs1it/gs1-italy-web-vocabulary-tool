@@ -1,5 +1,5 @@
 import type { RefObject } from 'preact'
-import { ArtBiscuits, ArtJacket, ArtOffice, Pict } from '../components/Art'
+import { Pict } from '../components/Art'
 import { Lottie } from '../components/Lottie'
 import { t } from '../i18n'
 import { freeText, linked, structured } from '../lottie/animations'
@@ -148,15 +148,14 @@ export function Welcome({ heading, onExample }: Props) {
         <div class="example-grid">
           {(
             [
-              ['biscuits', 'welcome.biscuits', 'welcome.biscuitsDetail', 'orange', ArtBiscuits],
-              ['denimJacket', 'welcome.jacket', 'welcome.jacketDetail', 'teal', ArtJacket],
-              ['office', 'welcome.office', 'welcome.officeDetail', 'green', ArtOffice],
+              ['biscuits', 'welcome.biscuits', 'welcome.biscuitsDetail', 'orange', 'biscotti-cacao.svg'],
+              ['denimJacket', 'welcome.jacket', 'welcome.jacketDetail', 'teal', 'giacca-denim.svg'],
+              ['office', 'welcome.office', 'welcome.officeDetail', 'green', 'sede-milano.svg'],
             ] as const
-          ).map(([name, title, detail, tone, Art]) => (
+          ).map(([name, title, detail, tone, image]) => (
             <button type="button" key={name} class={`example tile tone-${tone}`} onClick={() => onExample(name)}>
-              <span class="example-art">
-                <Art />
-              </span>
+              {/* La stessa immagine che l'esempio mette nel campo gs1:image. */}
+              <img class="example-art" src={`examples/${image}`} alt="" width={800} height={600} loading="lazy" />
               <span class="example-title">{t(title)}</span>
               <span>{t(detail)}</span>
               <span class="tile-foot">

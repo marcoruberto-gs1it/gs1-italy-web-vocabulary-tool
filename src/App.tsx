@@ -130,8 +130,19 @@ export function App() {
         <ActiveContext.Provider value={active}>
           <div class={`app mode-${mode}`} lang={language}>
             <header class="topbar">
-              <img class="logo" src={logo} alt={t('app.logoAlt')} width={112} height={40} />
-              <span class="app-title">{t('app.title')}</span>
+              {/* Il logo riporta all'home "Da dove partire", senza perdere i dati inseriti. */}
+              <button
+                type="button"
+                class="brand"
+                aria-label={t('app.home')}
+                onClick={() => {
+                  setMode('wizard')
+                  goTab('welcome')
+                }}
+              >
+                <img class="logo" src={logo} alt="" width={112} height={40} />
+                <span class="app-title">{t('app.title')}</span>
+              </button>
               <div class="topbar-actions">
                 <div class="segmented" role="group" aria-label={t('app.mode')}>
                   <button type="button" aria-pressed={mode === 'wizard'} onClick={() => setMode('wizard')}>

@@ -113,7 +113,11 @@ Verificati a mano nel browser (Edge, schermate in `docs/screenshots/`): ogni tab
 
 ## Dati di esempio
 
-Gli esempi "Biscotti" e "Giacca in denim" usano brand e aziende di fantasia, il prefisso aziendale d'esempio 8001234 con cifre di controllo calcolate e URL sul dominio riservato `example.com`.
+Gli esempi "Biscotti", "Giacca in denim" e "Sede aziendale" usano brand e aziende di fantasia, il prefisso aziendale d'esempio 8001234 con cifre di controllo calcolate e pagine sul dominio riservato `example.com`.
+
+Le immagini dei prodotti (campo `gs1:image`) sono illustrazioni vettoriali nei colori GS1 Italy, pubblicate con lo strumento in `public/examples/` e generate da `node scripts/example-images.mjs` (il barcode è l'EAN-13 vero del GTIN). Negli esempi l'URL punta alla copia pubblicata su GitHub Pages (`https://marcoruberto-gs1it.github.io/gs1-italy-web-vocabulary-tool/examples/…`), perché `gs1:image` vuole un indirizzo https pubblico; finché lo strumento non è pubblicato, l'anteprima nell'app usa la copia locale. Le stesse immagini illustrano gli esempi nell'home.
+
+Il logo in alto riporta a "Da dove partire" senza cancellare i dati.
 
 ## Licenze
 

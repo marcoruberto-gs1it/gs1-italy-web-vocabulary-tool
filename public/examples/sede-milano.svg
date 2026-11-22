@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="Azienda Esempio S.r.l., sede di Milano">
+<title>Azienda Esempio S.r.l., sede di Milano</title>
+<rect width="800" height="600" fill="#c2eed5"/>
+<circle cx="400" cy="300" r="230" fill="#ffffff" opacity="0.7"/>
+<rect x="290" y="110" width="220" height="400" rx="6" fill="#ffffff" stroke="#002c6c" stroke-width="4"/>
+<rect x="292" y="112" width="216" height="62" fill="#002c6c"/>
+<text x="400" y="152" text-anchor="middle" font-family="Montserrat, Verdana, sans-serif" font-weight="800" font-size="24" textLength="190" lengthAdjust="spacingAndGlyphs" fill="#ffffff">Azienda Esempio</text>
+<rect x="316" y="200" width="44" height="40" rx="4" fill="#d6dde7" stroke="#002c6c" stroke-width="3"/><rect x="376" y="200" width="44" height="40" rx="4" fill="#d6dde7" stroke="#002c6c" stroke-width="3"/><rect x="436" y="200" width="44" height="40" rx="4" fill="#d6dde7" stroke="#002c6c" stroke-width="3"/><rect x="316" y="262" width="44" height="40" rx="4" fill="#d6dde7" stroke="#002c6c" stroke-width="3"/><rect x="376" y="262" width="44" height="40" rx="4" fill="#d6dde7" stroke="#002c6c" stroke-width="3"/><rect x="436" y="262" width="44" height="40" rx="4" fill="#d6dde7" stroke="#002c6c" stroke-width="3"/><rect x="316" y="324" width="44" height="40" rx="4" fill="#d6dde7" stroke="#002c6c" stroke-width="3"/><rect x="376" y="324" width="44" height="40" rx="4" fill="#d6dde7" stroke="#002c6c" stroke-width="3"/><rect x="436" y="324" width="44" height="40" rx="4" fill="#d6dde7" stroke="#002c6c" stroke-width="3"/><rect x="316" y="386" width="44" height="40" rx="4" fill="#d6dde7" stroke="#002c6c" stroke-width="3"/><rect x="376" y="386" width="44" height="40" rx="4" fill="#d6dde7" stroke="#002c6c" stroke-width="3"/><rect x="436" y="386" width="44" height="40" rx="4" fill="#d6dde7" stroke="#002c6c" stroke-width="3"/>
+<rect x="372" y="440" width="56" height="70" fill="#22bcb9"/>
+<path d="M150 520h500" stroke="#002c6c" stroke-width="4"/>
+<path d="M590 150a46 46 0 1 1 92 0c0 38-46 80-46 80s-46-42-46-80z" fill="#f26334"/>
+<circle cx="636" cy="150" r="17" fill="#ffffff"/>
+<g transform="translate(90 330)">
+<rect width="170" height="110" rx="12" fill="#ffffff" stroke="#4a4a4a" stroke-width="3"/>
+<circle cx="38" cy="40" r="16" fill="#00b74f"/>
+<rect x="66" y="30" width="80" height="14" rx="7" fill="#002c6c"/>
+<rect x="24" y="72" width="122" height="12" rx="6" fill="#e5e8eb"/>
+</g>
+</svg>

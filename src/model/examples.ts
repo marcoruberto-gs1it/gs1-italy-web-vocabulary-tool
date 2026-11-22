@@ -4,6 +4,24 @@
  */
 import { emptyProduct, initialState, type State } from './state'
 
+/** Dove sarà pubblicato lo strumento: le immagini degli esempi stanno nella sua cartella examples/. */
+export const PAGES_URL = 'https://marcoruberto-gs1it.github.io/gs1-italy-web-vocabulary-tool/'
+
+/**
+ * L'URL https dell'immagine di un esempio (gs1:image vuole un indirizzo https pubblico). Da una pagina
+ * servita in https è l'indirizzo della copia pubblicata con l'app; altrimenti quello di GitHub Pages.
+ */
+export function exampleImage(file: string): string {
+  if (typeof location !== 'undefined' && location.protocol === 'https:') return new URL(`examples/${file}`, document.baseURI).href
+  return `${PAGES_URL}examples/${file}`
+}
+
+/** L'immagine da mostrare nell'anteprima: per gli esempi, la copia locale, che c'è anche prima della pubblicazione. */
+export function previewSrc(url: string): string {
+  const m = url.match(/\/examples\/([\w-]+\.svg)$/)
+  return m && typeof document !== 'undefined' ? new URL(`examples/${m[1]}`, document.baseURI).href : url
+}
+
 export function biscuits(): State {
   const s = initialState()
   return {
@@ -21,7 +39,7 @@ export function biscuits(): State {
         it: 'Biscotti frollini al cacao, cotti al forno. Confezione da 250 g.',
         en: 'Baked cocoa shortbread biscuits. 250 g pack.',
       },
-      image: 'https://www.example.com/img/biscotti-cacao.jpg',
+      image: exampleImage('biscotti-cacao.svg'),
       gpc: '10000161',
       pageUrl: 'https://www.example.com/prodotti/biscotti-cacao',
       netContent: { value: '250', unit: 'GRM' },
@@ -66,7 +84,7 @@ export function denimJacket(): State {
         it: 'Giacca in denim a quattro tasche, chiusura con bottoni metallici.',
         en: 'Four-pocket denim jacket with metal button fastening.',
       },
-      image: 'https://www.example.com/img/giacca-denim.jpg',
+      image: exampleImage('giacca-denim.svg'),
       gpc: '10001350',
       pageUrl: 'https://www.example.com/abbigliamento/giacca-denim',
       netContent: { value: '1', unit: 'H87' },

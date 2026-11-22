@@ -5,8 +5,9 @@
 import { useForm } from '../form'
 import { countryName, t, tk } from '../i18n'
 import { ean13, ean13Digits } from '../model/barcode'
+import { previewSrc } from '../model/examples'
 import { checkGtin } from '../model/gs1'
-import { toNumber } from '../model/validate'
+import { isHttps, toNumber } from '../model/validate'
 import { Callout, fit, Plate, Val, wrap } from './parts'
 
 /** Il barcode: barre dai 95 moduli e cifre sotto, nelle tre gruppi dell'EAN-13. */
@@ -72,9 +73,20 @@ export function ProductPlate() {
       {/* Immagine */}
       <rect x="62" y="98" width="110" height="78" rx="3" class={p.image ? 'pl-photo' : 'pl-blank'} />
       {p.image ? (
-        <g class="pl-photo-mark">
-          <circle cx="146" cy="118" r="8" />
-          <path d="M70 168l30-34 22 22 14-12 28 24z" />
+        <g>
+          {/* Il segno di foto resta sotto: se l'immagine non si carica, si vede lui. */}
+          <g class="pl-photo-mark">
+            <circle cx="146" cy="118" r="8" />
+            <path d="M70 168l30-34 22 22 14-12 28 24z" />
+          </g>
+          {isHttps(p.image) && (
+            <>
+              <clipPath id="photo-clip">
+                <rect x="62" y="98" width="110" height="78" rx="3" />
+              </clipPath>
+              <image href={previewSrc(p.image)} x="62" y="98" width="110" height="78" preserveAspectRatio="xMidYMid slice" clip-path="url(#photo-clip)" />
+            </>
+          )}
         </g>
       ) : (
         <text x="117" y="141" text-anchor="middle" class="pl-empty">

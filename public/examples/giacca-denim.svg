@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="Tela Esempio, Giacca in denim taglia M">
+<title>Tela Esempio, Giacca in denim taglia M</title>
+<rect width="800" height="600" fill="#caefee"/>
+<circle cx="400" cy="300" r="230" fill="#ffffff" opacity="0.7"/>
+<path d="M325 90l75 34 75-34 118 62-34 124-40-17v234H281V259l-40 17-34-124z" fill="#002c6c"/>
+<path d="M325 90l75 34 75-34-34 74-41-24-41 24z" fill="#002c6c" opacity="0.8" stroke="#ffffff" stroke-opacity="0.4" stroke-width="3"/>
+<path d="M400 140v350" stroke="#ffffff" stroke-width="4" stroke-dasharray="10 10" opacity="0.6"/>
+<rect x="312" y="262" width="60" height="50" rx="6" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.7"/>
+<rect x="428" y="262" width="60" height="50" rx="6" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.7"/>
+<circle cx="420" cy="205" r="7" fill="#ffffff"/><circle cx="420" cy="280" r="7" fill="#ffffff"/><circle cx="420" cy="355" r="7" fill="#ffffff"/><circle cx="420" cy="430" r="7" fill="#ffffff"/>
+<path d="M300 470h200" stroke="#ffffff" stroke-width="4" opacity="0.4"/>
+<g transform="rotate(-8 640 380)">
+<path d="M570 320h130l40 60-40 60H570a12 12 0 0 1-12-12V332a12 12 0 0 1 12-12z" fill="#ffffff" stroke="#4a4a4a" stroke-width="3"/>
+<circle cx="700" cy="380" r="10" fill="#caefee" stroke="#4a4a4a" stroke-width="3"/>
+<text x="584" y="372" font-family="Montserrat, Verdana, sans-serif" font-weight="800" font-size="34" fill="#002c6c">89,90</text>
+<rect x="584" y="392" width="64" height="12" rx="6" fill="#f26334"/>
+</g>
+<g transform="translate(110 330)">
+<rect width="130" height="170" rx="10" fill="#ffffff" stroke="#4a4a4a" stroke-width="3"/>
+<path d="M0 20h130" stroke="#e5e8eb" stroke-width="3" stroke-dasharray="6 6"/>
+<text x="65" y="74" text-anchor="middle" font-family="Montserrat, Verdana, sans-serif" font-weight="800" font-size="40" fill="#002c6c">M</text>
+<text x="65" y="112" text-anchor="middle" font-family="Montserrat, Verdana, sans-serif" font-weight="700" font-size="17" textLength="104" lengthAdjust="spacingAndGlyphs" fill="#4a4a4a">98% Cotone</text>
+<text x="65" y="138" text-anchor="middle" font-family="Montserrat, Verdana, sans-serif" font-weight="700" font-size="17" textLength="98" lengthAdjust="spacingAndGlyphs" fill="#4a4a4a">2% Elastan</text>
+</g>
+</svg>
