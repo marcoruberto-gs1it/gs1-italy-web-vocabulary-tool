@@ -1541,6 +1541,8 @@ a.term:hover {
 .g-node {
   display: grid;
   gap: 8px;
+  min-width: 0;
+  container-type: inline-size;
   padding: 12px 14px;
   border-radius: var(--r-m);
   background: var(--white);
@@ -1557,6 +1559,8 @@ a.term:hover {
   gap: 6px 8px;
 }
 .g-class {
+  max-width: 100%;
+  overflow-wrap: anywhere;
   padding: 3px 12px;
   border-radius: 999px;
   background: var(--blue-tint-2);
@@ -1584,6 +1588,19 @@ a.term:hover {
 }
 .g-props > li:has(> .g-node) {
   grid-template-columns: minmax(0, 1fr);
+}
+/* Nelle colonne strette, proprietà e valore vanno su due righe. */
+@container (max-width: 300px) {
+  .g-props > li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+  .g-props {
+    padding-left: 8px;
+  }
+  .g-node .g-node {
+    padding: 10px;
+  }
 }
 .g-props > li.schema .g-prop {
   font-style: italic;
@@ -1616,6 +1633,7 @@ a.term:hover {
 }
 .g-preview {
   width: 120px;
+  max-width: 100%;
   height: auto;
   border-radius: var(--r-s);
   border: 1px solid var(--line);
