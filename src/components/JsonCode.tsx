@@ -1,5 +1,6 @@
 /** JSON con colori per chiavi e valori; le righe appena cambiate si evidenziano per un istante. */
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks'
+import { refUrl } from './Term'
 
 const TOKEN = /("(?:\\.|[^"\\])*")(\s*:)?|(-?\d+(?:\.\d+)?)|\b(true|false|null)\b/g
 
@@ -8,7 +9,22 @@ function Line({ text }: { text: string }) {
   let last = 0
   for (const m of text.matchAll(TOKEN)) {
     if (m.index! > last) parts.push(text.slice(last, m.index))
-    if (m[1]) parts.push(<span class={m[2] ? (m[1].startsWith('"gs1:') ? 'j-key j-gs1' : m[1].startsWith('"schema:') ? 'j-key j-schema' : 'j-key') : 'j-str'}>{m[1]}</span>, m[2] ?? '')
+    if (m[1]) {
+      const cls = m[2] ? (m[1].startsWith('"gs1:') ? 'j-key j-gs1' : m[1].startsWith('"schema:') ? 'j-key j-schema' : 'j-key') : 'j-str'
+      const inner = m[1].slice(1, -1)
+      // Termini dei vocabolari: alla definizione. Indirizzi web: si aprono.
+      const href = refUrl(inner) ?? (/^https?:\/\//.test(inner) ? inner : null)
+      parts.push(
+        href ? (
+          <a class={`${cls} j-link`} href={href} target="_blank" rel="noopener noreferrer">
+            {m[1]}
+          </a>
+        ) : (
+          <span class={cls}>{m[1]}</span>
+        ),
+        m[2] ?? '',
+      )
+    }
     else parts.push(<span class="j-lit">{m[0]}</span>)
     last = m.index! + m[0].length
   }

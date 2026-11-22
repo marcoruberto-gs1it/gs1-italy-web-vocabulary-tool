@@ -11,7 +11,7 @@
       if (b.l < -0.5 || b.r > W + 0.5) out.push(`SVG fuori dalla tavola: "${t.textContent.trim().slice(0, 40)}" (${b.l.toFixed(0)}–${b.r.toFixed(0)})`)
       const max = t.dataset.max ? Number(t.dataset.max) : null
       if (max && b.r - b.l > max + 1.5) out.push(`SVG oltre data-max ${max}: "${t.textContent.trim().slice(0, 40)}" (${(b.r - b.l).toFixed(0)})`)
-      const prev = t.previousElementSibling
+      const prev = t.previousElementSibling ?? (t.parentElement?.tagName === 'a' ? t.parentElement.previousElementSibling : null)
       if (prev && prev.classList.contains('pill')) { const rb = toSvg(prev); if (b.l < rb.l - 0.5 || b.r > rb.r + 0.5) out.push(`SVG fuori dalla pillola: "${t.textContent.trim()}"`) }
     }
   }

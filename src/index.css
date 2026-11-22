@@ -1000,6 +1000,9 @@ button:hover .arrow {
 .side {
   position: sticky;
   top: calc(var(--tabbar) + 8px);
+  max-height: calc(100vh - var(--tabbar) - 24px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 28px 28px 32px;
   border-radius: var(--r-xl);
   border: 1px solid rgba(255, 255, 255, 0.7);
@@ -1507,6 +1510,121 @@ fieldset:focus-within > legend .mark {
   padding: 0 16px;
   font-size: 13px;
 }
+/* Link ai termini dei vocabolari */
+a.term {
+  color: var(--blue);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--teal);
+  text-underline-offset: 3px;
+}
+a.term:hover {
+  text-decoration-thickness: 2px;
+}
+.svg-term text {
+  text-decoration: underline;
+}
+.svg-term:hover text,
+.svg-term:focus-visible text {
+  fill: var(--orange);
+}
+.j-link {
+  text-decoration: underline;
+  text-decoration-color: var(--teal);
+  text-underline-offset: 2px;
+}
+
+/* Il grafo del markup: un albero HTML */
+.graph {
+  gap: 10px;
+}
+.g-node {
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: var(--r-m);
+  background: var(--white);
+  font-size: 12.5px;
+}
+.g-node .g-node {
+  margin-top: 4px;
+  background: var(--bg);
+}
+.g-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+}
+.g-class {
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: var(--blue-tint-2);
+  font-weight: 700;
+  text-decoration: none !important;
+}
+.g-class.gs1 {
+  background: var(--blue);
+  color: var(--white) !important;
+}
+.g-props {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 12px;
+  display: grid;
+  gap: 6px;
+  border-left: 2px solid var(--blue-tint-2);
+}
+.g-props > li {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  gap: 4px 10px;
+  align-items: start;
+  min-width: 0;
+}
+.g-props > li:has(> .g-node) {
+  grid-template-columns: minmax(0, 1fr);
+}
+.g-props > li.schema .g-prop {
+  font-style: italic;
+}
+.g-prop {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.g-val,
+.g-url {
+  min-width: 0;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+.g-url {
+  display: grid;
+  gap: 6px;
+}
+.g-url a {
+  overflow-wrap: anywhere;
+}
+.g-tag {
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--teal-tint-2);
+  color: var(--blue);
+  font-size: 10.5px;
+  font-weight: 700;
+}
+.g-preview {
+  width: 120px;
+  height: auto;
+  border-radius: var(--r-s);
+  border: 1px solid var(--line);
+  background: var(--white);
+}
+.g-code {
+  overflow-wrap: anywhere;
+}
+
 .combo {
   position: relative;
   display: grid;
@@ -2267,6 +2385,7 @@ select.input {
   .side {
     position: static;
     order: -1;
+    max-height: 70vh;
   }
   .plate-svg {
     max-height: 42vh;

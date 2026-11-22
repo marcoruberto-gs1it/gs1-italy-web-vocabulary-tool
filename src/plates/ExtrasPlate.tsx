@@ -2,6 +2,7 @@
  * Tavola di "Altri dati": per ogni nodo del markup un anello con le proprietà del vocabolario già usate
  * su quelle disponibili, e sotto le proprietà aggiunte, come etichette.
  */
+import { SvgTerm } from '../components/Term'
 import { useEffect, useState } from 'preact/hooks'
 import { useForm } from '../form'
 import { t } from '../i18n'
@@ -56,9 +57,11 @@ export function ExtrasPlate() {
             <text x={cx} y="132" text-anchor="middle" data-max={room} class="pl-head small">
               {fit(label(tg), 22)}
             </text>
-            <text x={cx} y="148" text-anchor="middle" data-max={room} class="pl-mono tiny pl-label">
-              {fit(cls, 26)}
-            </text>
+            <SvgTerm t={cls}>
+              <text x={cx} y="148" text-anchor="middle" data-max={room} class="pl-mono tiny pl-label">
+                {fit(cls, 26)}
+              </text>
+            </SvgTerm>
           </g>
         )
       })}

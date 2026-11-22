@@ -1,4 +1,5 @@
 /** Riepilogo: tutti i dati raggruppati per passo, ciascuno con "Modifica", e il punteggio AI-readiness. */
+import { Term } from '../components/Term'
 import { useLayoutEffect, useRef } from 'preact/hooks'
 import { Lottie } from '../components/Lottie'
 import { useForm } from '../form'
@@ -120,7 +121,19 @@ export function Summary() {
                   <div class={`summary-row ${error ? 'has-error' : ''}`} key={r.label}>
                     <dt>{r.label}</dt>
                     <dd>
-                      {r.value ? <span class={/^https:|^\d+$|^gs1:/.test(r.value) ? 'mono' : ''}>{r.value}</span> : <span class="empty">{t('summary.empty')}</span>}
+                      {r.value ? (
+                        /^gs1:/.test(r.value) ? (
+                          <Term t={r.value} />
+                        ) : /^https:/.test(r.value) ? (
+                          <a class="mono" href={r.value} target="_blank" rel="noopener noreferrer">
+                            {r.value}
+                          </a>
+                        ) : (
+                          <span class={/^\d+$/.test(r.value) ? 'mono' : ''}>{r.value}</span>
+                        )
+                      ) : (
+                        <span class="empty">{t('summary.empty')}</span>
+                      )}
                       {error && <span class="row-error">{t(error.key, error.vars)}</span>}
                     </dd>
                   </div>

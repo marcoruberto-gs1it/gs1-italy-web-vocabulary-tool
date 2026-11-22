@@ -1,4 +1,5 @@
 /** Tavola della sede: la facciata con l'insegna, l'indirizzo, il GLN come Digital Link, il sito. */
+import { SvgTerm } from '../components/Term'
 import { useForm } from '../form'
 import { countryName, t } from '../i18n'
 import { checkGln } from '../model/gs1'
@@ -49,9 +50,11 @@ export function PlacePlate() {
           GLN
         </text>
         <Val x={10} y={40} max={108} value={gln.ok ? gln.value : ''} empty="0000000000000" cls="pl-mono small" />
-        <text x="10" y="64" data-max={108} class="pl-label small">
-          gs1:Place
-        </text>
+        <SvgTerm t="gs1:Place">
+          <text x="10" y="64" data-max={108} class="pl-label small">
+            gs1:Place
+          </text>
+        </SvgTerm>
         <Val x={10} y={82} max={108} value={gln.ok ? '/414/…' : ''} empty="/414/" cls="pl-mono small" />
       </g>
       <Callout field="locationGln" at={[390, 260]} to={[370, 280]} />

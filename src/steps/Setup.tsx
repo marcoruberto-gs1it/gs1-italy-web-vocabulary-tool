@@ -1,4 +1,5 @@
 /** Passi di impostazione: lingue e dominio, ruolo, soggetto, categoria. */
+import { Term } from '../components/Term'
 import { Field } from '../components/Field'
 import { Checkbox, Choices, Select, TextInput } from '../components/inputs'
 import { product, useForm } from '../form'
@@ -121,7 +122,8 @@ export function CategoryStep() {
       )}
       {s.category && (
         <p class="term-note">
-          {t('category.class', { term: productClass(s) })}
+          {t('category.class', { term: '' })}
+          <Term t={productClass(s)} />
         </p>
       )}
     </>

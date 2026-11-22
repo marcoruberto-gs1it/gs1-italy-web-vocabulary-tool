@@ -81,7 +81,8 @@ export function fitTexts(svg: SVGSVGElement) {
     el.removeAttribute('lengthAdjust')
   }
   for (const rect of svg.querySelectorAll<SVGRectElement>('rect.pill')) {
-    const text = rect.nextElementSibling as SVGTextElement | null
+    const next = rect.nextElementSibling
+    const text = (next?.tagName === 'a' ? next.querySelector('text') : next) as SVGTextElement | null
     if (!text || text.tagName !== 'text') continue
     const pad = Number(rect.dataset.pad ?? 11)
     const cap = Number(rect.dataset.max ?? width - rect.x.baseVal.value - EDGE)

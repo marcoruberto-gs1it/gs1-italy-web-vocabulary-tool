@@ -1,4 +1,5 @@
 /** Tavola del profilo: il Digital Link scomposto, chi pubblica, cosa descrive, la classe GS1. */
+import { SvgTerm } from '../components/Term'
 import { useForm } from '../form'
 import { t } from '../i18n'
 import { checkGln, checkGtin } from '../model/gs1'
@@ -96,9 +97,11 @@ export function StartPlate() {
       {place ? (
         <g>
           <rect x="16" y="276" width="110" height="28" rx="14" class="pl-node on pill" data-pad="14" />
-          <text x="30" y="294" class="pl-mono pl-on">
-            gs1:Place
-          </text>
+          <SvgTerm t="gs1:Place">
+            <text x="30" y="294" class="pl-mono pl-on">
+              gs1:Place
+            </text>
+          </SvgTerm>
         </g>
       ) : (
         <g>
@@ -118,9 +121,11 @@ export function StartPlate() {
                 <g key={r.label}>
                   {r.depth > 0 && <path d={`M${x - 16} ${y - 20}V${y + 13}h16`} class={`pl-edge ${r.on ? 'on' : ''}`} />}
                   <rect x={x} y={y} width={w} height="26" rx="13" class={`pl-node pill ${r.on ? 'on' : ''}`} data-max={330 - x} />
-                  <text x={x + 11} y={y + 17} class={`pl-mono small ${r.on ? 'pl-on' : 'pl-label'}`}>
-                    {r.label}
-                  </text>
+                  <SvgTerm t={r.label}>
+                    <text x={x + 11} y={y + 17} class={`pl-mono small ${r.on ? 'pl-on' : 'pl-label'}`}>
+                      {r.label}
+                    </text>
+                  </SvgTerm>
                 </g>
               )
             })

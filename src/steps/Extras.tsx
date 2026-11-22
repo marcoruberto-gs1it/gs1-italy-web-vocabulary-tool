@@ -3,6 +3,7 @@
  * per aggiungerne altre. Una proprietà che punta a una classe si può collegare a una risorsa (URL, GTIN,
  * GLN) oppure descrivere sul posto, con le proprietà di quella classe: così si raggiunge tutto il vocabolario.
  */
+import { Term as TermLink } from '../components/Term'
 import { useEffect, useMemo, useState } from 'preact/hooks'
 import { Field } from '../components/Field'
 import { Select, TextInput } from '../components/inputs'
@@ -58,7 +59,7 @@ export function Extras() {
         return (
           <section class="extras-node" key={target} aria-labelledby={`extras-${target}`}>
             <h3 id={`extras-${target}`}>
-              {title} <span class="mono">{cls}</span>
+              {title} <TermLink t={cls} />
             </h3>
             <NodeEditor terms={terms} path={target} cls={cls} taken={inMarkup[target]} />
           </section>
@@ -131,7 +132,7 @@ function TermPicker({ terms, path, cls, taken }: { terms: Terms; path: string; c
               <li key={x.term} class={used ? 'used' : ''}>
                 <span class="term-text">
                   <strong>{x.label}</strong>
-                  <span class="mono">{x.term}</span>
+                  <TermLink t={x.term} />
                   <span class="term-desc">{x.description.length > 150 ? `${x.description.slice(0, 149)}…` : x.description}</span>
                 </span>
                 <span class="term-side">
