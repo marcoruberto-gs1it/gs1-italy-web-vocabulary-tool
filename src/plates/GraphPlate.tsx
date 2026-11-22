@@ -55,7 +55,7 @@ export function graphRows(doc: Obj, max = 2): Row[] {
   return rows
 }
 
-const CH = 6.6 // carattere monospace a 11 px
+const CH = 6.9 // carattere monospace a 10,5 px, con un po' di margine: la pillola poi si misura sul testo vero
 
 export function GraphPlate() {
   const { state } = useForm()
@@ -78,19 +78,14 @@ export function GraphPlate() {
           <g key={i}>
             {r.depth > 0 && parent >= 0 && <path d={`M${x - 18} ${12 + parent * H + 22}V${y + 11}h14`} class="pl-edge" />}
             {prop && (
-              <text x={x} y={y + 15} class="pl-mono tiny pl-label">
+              <text x={x} y={y + 15} data-max={px - x - 6} class="pl-mono tiny pl-label">
                 {prop}
               </text>
             )}
-            <rect x={px} y={y} width={Math.min(w, 396 - px)} height="22" rx="11" class={r.depth === 0 ? 'pl-node on' : 'pl-node'} />
+            <rect x={px} y={y} width={Math.min(w, 396 - px)} height="22" rx="11" class={r.depth === 0 ? 'pl-node on pill' : 'pl-node pill'} data-pad="9" data-max={396 - px} />
             <text x={px + 9} y={y + 15} class={`pl-mono tiny ${r.depth === 0 ? 'pl-on' : 'pl-value'}`}>
               {label}
             </text>
-            {r.literals > 0 && px + w + 8 < 360 && (
-              <text x={px + w + 8} y={y + 15} class="pl-label tiny">
-                +{r.literals}
-              </text>
-            )}
           </g>
         )
       })}

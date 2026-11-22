@@ -40,33 +40,33 @@ function Food({ y0 }: { y0: number }) {
     <g>
       {/* Ingredienti */}
       <rect x="40" y={y0} width="344" height="86" rx="4" class="pl-paper" />
-      <text x="52" y={y0 + 20} class="pl-head">
+      <text x="52" y={y0 + 20} data-max={320} class="pl-head">
         {t('field.ingredients')}
       </text>
       {ingredients.length ? (
         ingredients.map((l, i) => (
-          <text key={i} x="52" y={y0 + 38 + i * 13} class="pl-small">
+          <text key={i} x="52" y={y0 + 38 + i * 13} data-max={320} class="pl-small">
             {l}
           </text>
         ))
       ) : (
-        <text x="52" y={y0 + 40} class="pl-empty small">
+        <text x="52" y={y0 + 40} data-max={320} class="pl-empty small">
           …
         </text>
       )}
       <Callout field="ingredients" at={[18, y0 + 16]} to={[40, y0 + 16]} />
       {/* Allergeni */}
       <g transform={`translate(40 ${y0 + 98})`}>
-        <text x="0" y="12" class="pl-head">
+        <text x="0" y="12" data-max={340} class="pl-head">
           {t('field.allergens')}
         </text>
         {contains.length + may.length === 0 ? (
-          <text x="0" y="32" class="pl-empty small">
+          <text x="0" y="32" data-max={340} class="pl-empty small">
             {t('plate.noAllergens')}
           </text>
         ) : (
           allergenLines.map(([line, cls], i) => (
-            <text key={i} x="0" y={32 + i * 16} class={`pl-small ${cls}`}>
+            <text key={i} x="0" y={32 + i * 16} data-max={340} class={`pl-small ${cls}`}>
               {line}
             </text>
           ))
@@ -77,10 +77,10 @@ function Food({ y0 }: { y0: number }) {
       <g transform={`translate(40 ${y0 + 190})`}>
         <rect width="344" height={30 + ROWS.length * rowH} class="pl-table" />
         <rect width="344" height="30" class="pl-table-head" />
-        <text x="10" y="20" class="pl-on strong">
+        <text x="10" y="20" data-max={200} class="pl-on strong">
           {t('field.nutrition')}
         </text>
-        <text x="334" y="20" text-anchor="end" class="pl-on small">
+        <text x="334" y="20" text-anchor="end" data-max={110} class="pl-on small">
           {p.nutritionBasis === 'GRM' ? t('nutrition.per100g') : t('nutrition.per100ml')}
         </text>
         {ROWS.map(([k, sub], i) => {
@@ -88,10 +88,10 @@ function Food({ y0 }: { y0: number }) {
           return (
             <g key={k} transform={`translate(0 ${30 + i * rowH})`}>
               {i > 0 && <line x1="0" x2="344" y1="0" y2="0" class="pl-rule" />}
-              <text x={sub ? 24 : 10} y="15" class="pl-small">
+              <text x={sub ? 24 : 10} y="15" data-max={sub ? 186 : 200} class="pl-small">
                 {t(`nutrition.${k}`)}
               </text>
-              <text x="334" y="15" text-anchor="end" class={v ? 'pl-value small' : 'pl-empty small'}>
+              <text x="334" y="15" text-anchor="end" data-max={120} class={v ? 'pl-value small' : 'pl-empty small'}>
                 {v || '–'}
               </text>
             </g>
@@ -113,25 +113,25 @@ function Wearable({ y0 }: { y0: number }) {
       <path d={`M120 ${y0}h160v6h-160z`} class="pl-side" />
       <rect x="120" y={y0 + 6} width="160" height="300" class="pl-label-tape" />
       <path d={`M120 ${y0 + 6}h160M120 ${y0 + 12}h160`} class="pl-stitch" />
-      <text x="200" y={y0 + 48} text-anchor="middle" class={p.size ? 'pl-value pl-size' : 'pl-empty pl-size'}>
+      <text x="200" y={y0 + 48} text-anchor="middle" data-max={140} class={p.size ? 'pl-value pl-size' : 'pl-empty pl-size'}>
         {p.size || t('field.size')}
       </text>
       <Callout field="size" at={[300, y0 + 40]} to={[244, y0 + 40]} />
       <line x1="140" x2="260" y1={y0 + 66} y2={y0 + 66} class="pl-rule" />
       {materials.length ? (
         materials.slice(0, 5).map((m, i) => (
-          <text key={i} x="200" y={y0 + 90 + i * 18} text-anchor="middle" class="pl-value">
+          <text key={i} x="200" y={y0 + 90 + i * 18} text-anchor="middle" data-max={140} class="pl-value">
             {fit(`${m.percent ? `${m.percent.replace('.', ',')}% ` : ''}${m.name.it}`, 22)}
           </text>
         ))
       ) : (
-        <text x="200" y={y0 + 90} text-anchor="middle" class="pl-empty">
+        <text x="200" y={y0 + 90} text-anchor="middle" data-max={140} class="pl-empty">
           {t('field.materials')}
         </text>
       )}
       <Callout field="materials" at={[100, y0 + 86]} to={[140, y0 + 86]} />
       <line x1="140" x2="260" y1={y0 + 190} y2={y0 + 190} class="pl-rule" />
-      <text x="200" y={y0 + 212} text-anchor="middle" class={p.colour.it ? 'pl-value' : 'pl-empty'}>
+      <text x="200" y={y0 + 212} text-anchor="middle" data-max={140} class={p.colour.it ? 'pl-value' : 'pl-empty'}>
         {fit(p.colour.it, 20) || t('field.colour')}
       </text>
       <Callout field="colour" at={[100, y0 + 208]} to={[140, y0 + 208]} />
@@ -160,19 +160,19 @@ export function DetailsPlate() {
       {kind === 'wearable' && <Wearable y0={10} />}
       <g transform={`translate(40 ${top + 10})`}>
         <rect width="344" height="126" rx="4" class="pl-paper" />
-        <text x="12" y="22" class="pl-head">
+        <text x="12" y="22" data-max={320} class="pl-head">
           {t('field.storage')}
         </text>
         {(storage.length ? storage : ['…']).map((l, i) => (
-          <text key={i} x="12" y={40 + i * 13} class={storage.length ? 'pl-small' : 'pl-empty small'}>
+          <text key={i} x="12" y={40 + i * 13} data-max={320} class={storage.length ? 'pl-small' : 'pl-empty small'}>
             {l}
           </text>
         ))}
-        <text x="12" y="84" class="pl-head">
+        <text x="12" y="84" data-max={320} class="pl-head">
           {t('field.usage')}
         </text>
         {(usage.length ? usage : ['…']).map((l, i) => (
-          <text key={i} x="12" y={102 + i * 13} class={usage.length ? 'pl-small' : 'pl-empty small'}>
+          <text key={i} x="12" y={102 + i * 13} data-max={320} class={usage.length ? 'pl-small' : 'pl-empty small'}>
             {l}
           </text>
         ))}

@@ -16,7 +16,7 @@ export function PlacePlate() {
       <rect x="60" y="80" width="280" height="170" class="pl-pack" />
       <path d="M50 80h300l-14-30H64z" class="pl-top" />
       <rect x="80" y="96" width="240" height="34" rx="2" class="pl-sign" />
-      <text x="200" y="118" text-anchor="middle" class={L.name ? 'pl-on strong' : 'pl-on'}>
+      <text x="200" y="118" text-anchor="middle" data-max={224} class={L.name ? 'pl-on strong' : 'pl-on'}>
         {fit(L.name || t('field.locationName'), 28)}
       </text>
       <Callout field="locationName" at={[30, 113]} to={[80, 113]} />
@@ -31,12 +31,12 @@ export function PlacePlate() {
         <circle cx="32" cy="24" r="3.5" fill="#fff" />
         {lines.length ? (
           lines.map((l, i) => (
-            <text key={i} x="54" y={24 + i * 18} class="pl-value small">
+            <text key={i} x="54" y={24 + i * 18} data-max={138} class="pl-value small">
               {fit(l, 20)}
             </text>
           ))
         ) : (
-          <text x="54" y="24" class="pl-empty small">
+          <text x="54" y="24" data-max={138} class="pl-empty small">
             {t('field.street')}
           </text>
         )}
@@ -45,14 +45,14 @@ export function PlacePlate() {
       {/* GLN e sito */}
       <g transform="translate(252 274)">
         <rect width="128" height="96" rx="4" class="pl-paper" />
-        <text x="10" y="22" class="pl-label small">
+        <text x="10" y="22" data-max={108} class="pl-label small">
           GLN
         </text>
-        <Val x={10} y={40} value={gln.ok ? gln.value : ''} empty="0000000000000" cls="pl-mono small" />
-        <text x="10" y="64" class="pl-label small">
+        <Val x={10} y={40} max={108} value={gln.ok ? gln.value : ''} empty="0000000000000" cls="pl-mono small" />
+        <text x="10" y="64" data-max={108} class="pl-label small">
           gs1:Place
         </text>
-        <Val x={10} y={82} value={gln.ok ? '/414/…' : ''} empty="/414/" cls="pl-mono small" />
+        <Val x={10} y={82} max={108} value={gln.ok ? '/414/…' : ''} empty="/414/" cls="pl-mono small" />
       </g>
       <Callout field="locationGln" at={[390, 260]} to={[370, 280]} />
       <Val x={40} y={404} value={gln.ok ? fit(`https://${dlDomain(s)}/414/${gln.value}`, 46) : ''} empty={`https://${dlDomain(s)}/414/…`} cls="pl-mono small" />

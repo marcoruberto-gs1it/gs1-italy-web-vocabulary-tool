@@ -32,19 +32,19 @@ export function MarkupPlate() {
       <g transform="translate(44 14)">
         <rect width="340" height="196" rx="4" class="pl-code" />
         {['<html>', '  <head>', '    <title>…</title>'].map((l, i) => (
-          <text key={i} x="12" y={24 + i * 18} class="pl-code-text">
+          <text key={i} x="12" y={24 + i * 18} data-max={316} class="pl-code-text">
             {l}
           </text>
         ))}
         <rect x="20" y="70" width="306" height="52" rx="3" class="pl-code-hl" />
-        <text x="28" y="90" class="pl-code-text hl">
+        <text x="28" y="90" data-max={290} class="pl-code-text hl">
           {'<script type="application/ld+json">'}
         </text>
-        <text x="28" y="110" class="pl-code-text hl">
+        <text x="28" y="110" data-max={290} class="pl-code-text hl">
           {'  { … }  </script>'}
         </text>
         {['  </head>', '  <body> … </body>', '</html>'].map((l, i) => (
-          <text key={i} x="12" y={144 + i * 18} class="pl-code-text">
+          <text key={i} x="12" y={144 + i * 18} data-max={316} class="pl-code-text">
             {l}
           </text>
         ))}
@@ -59,7 +59,7 @@ export function MarkupPlate() {
         <rect x="60" y="40" width="80" height="5" rx="2.5" class="pl-sky" />
         <path d="M180 34h28" class="pl-edge on" marker-end="url(#arrow-m)" />
         <rect x="214" y="12" width="126" height="46" rx="4" class="pl-code" />
-        <text x="226" y="40" class="pl-code-text">
+        <text x="226" y="40" data-max={106} class="pl-code-text">
           {'{ "gs1:…" }'}
         </text>
       </g>

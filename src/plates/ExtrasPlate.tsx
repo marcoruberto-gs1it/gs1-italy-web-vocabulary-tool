@@ -41,20 +41,22 @@ export function ExtrasPlate() {
         const used = Object.keys(nodeOf[tg]).filter((k) => k.startsWith('gs1:')).length
         const share = total ? Math.min(used / total, 1) : 0
         const cx = list.length === 1 ? 200 : 70 + i * (260 / Math.max(list.length - 1, 1))
+        // Lo spazio di ogni etichetta: la distanza tra un anello e l'altro.
+        const room = list.length === 1 ? 360 : Math.min(130, 260 / (list.length - 1) - 10)
         return (
           <g key={tg}>
             <circle cx={cx} cy="70" r={R} class="ring-bg" />
             <circle cx={cx} cy="70" r={R} class="ring-on" stroke-dasharray={C} stroke-dashoffset={C * (1 - share)} transform={`rotate(-90 ${cx} 70)`} />
-            <text x={cx} y="68" text-anchor="middle" class="pl-head">
+            <text x={cx} y="68" text-anchor="middle" data-max={56} class="pl-head">
               {used}
             </text>
-            <text x={cx} y="84" text-anchor="middle" class="pl-label small">
+            <text x={cx} y="84" text-anchor="middle" data-max={56} class="pl-label small">
               {terms ? `/ ${total}` : '…'}
             </text>
-            <text x={cx} y="132" text-anchor="middle" class="pl-head small">
+            <text x={cx} y="132" text-anchor="middle" data-max={room} class="pl-head small">
               {fit(label(tg), 22)}
             </text>
-            <text x={cx} y="148" text-anchor="middle" class="pl-mono tiny pl-label">
+            <text x={cx} y="148" text-anchor="middle" data-max={room} class="pl-mono tiny pl-label">
               {fit(cls, 26)}
             </text>
           </g>
@@ -66,7 +68,7 @@ export function ExtrasPlate() {
       {added.slice(0, 10).map((l, i) => (
         <g key={i} transform={`translate(${16 + (i % 2) * 188} ${198 + Math.floor(i / 2) * 30})`}>
           <rect width="180" height="22" rx="11" class="pl-chip strong" />
-          <text x="11" y="15" class="pl-chip-text strong">
+          <text x="11" y="15" data-max={160} class="pl-chip-text strong">
             {fit(l, 24)}
           </text>
         </g>

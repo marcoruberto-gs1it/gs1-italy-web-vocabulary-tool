@@ -47,7 +47,7 @@ export function StartPlate() {
       {seg.map((g, i) => (
         <g key={i}>
           <rect x={g.x} y="20" width={g.w} height="28" rx="3" class={i === 1 || i === 3 ? 'pl-field' : 'pl-sky'} />
-          <text x={g.x + 5} y="38" class={`pl-mono ${(i === 3 && (place ? gln.ok : gtin.ok)) || (i === 1 && dlDomain(s)) ? 'pl-value' : 'pl-label'}`}>
+          <text x={g.x + 5} y="38" data-max={g.w - 8} class={`pl-mono ${(i === 3 && (place ? gln.ok : gtin.ok)) || (i === 1 && dlDomain(s)) ? 'pl-value' : 'pl-label'}`}>
             {g.p}
           </text>
         </g>
@@ -75,7 +75,7 @@ export function StartPlate() {
       </text>
       <Pictogram kind="factory" x={16} y={148} on={s.role === 'manufacturer'} />
       <Pictogram kind="shop" x={100} y={148} on={s.role === 'retailer'} />
-      <text x="16" y="226" class="pl-label">
+      <text x="16" y="226" data-max={190} class="pl-label">
         {s.role ? fit(t(`role.${s.role}`), 26) : ''}
       </text>
       <Callout field="role" at={[188, 179]} />
@@ -84,7 +84,7 @@ export function StartPlate() {
       </text>
       <Pictogram kind="box" x={214} y={148} on={s.subject === 'product'} />
       <Pictogram kind="building" x={298} y={148} on={place} />
-      <text x="214" y="226" class="pl-label">
+      <text x="214" y="226" data-max={180} class="pl-label">
         {s.subject ? fit(t(`subject.${s.subject}`), 24) : ''}
       </text>
       <Callout field="subject" at={[386, 179]} />
@@ -95,8 +95,8 @@ export function StartPlate() {
       </text>
       {place ? (
         <g>
-          <rect x="16" y="276" width="140" height="28" rx="14" class="pl-node on" />
-          <text x="86" y="294" text-anchor="middle" class="pl-mono pl-on">
+          <rect x="16" y="276" width="110" height="28" rx="14" class="pl-node on pill" data-pad="14" />
+          <text x="30" y="294" class="pl-mono pl-on">
             gs1:Place
           </text>
         </g>
@@ -117,7 +117,7 @@ export function StartPlate() {
               return (
                 <g key={r.label}>
                   {r.depth > 0 && <path d={`M${x - 16} ${y - 20}V${y + 13}h16`} class={`pl-edge ${r.on ? 'on' : ''}`} />}
-                  <rect x={x} y={y} width={w} height="26" rx="13" class={`pl-node ${r.on ? 'on' : ''}`} />
+                  <rect x={x} y={y} width={w} height="26" rx="13" class={`pl-node pill ${r.on ? 'on' : ''}`} data-max={330 - x} />
                   <text x={x + 11} y={y + 17} class={`pl-mono small ${r.on ? 'pl-on' : 'pl-label'}`}>
                     {r.label}
                   </text>

@@ -3,7 +3,7 @@
  * mancanti. Stile da disegno tecnico: tratto blu sottile, campiture azzurre, dati in teal scuro.
  */
 import type { ComponentChildren } from 'preact'
-import { useContext } from 'preact/hooks'
+import { useContext, useEffect, useLayoutEffect, useRef } from 'preact/hooks'
 import { createContext } from 'preact'
 import { MarksContext } from './marks'
 
@@ -56,20 +56,84 @@ export function Callout({ field, at, to }: { field: string; at: [number, number]
 }
 
 /** Un valore dell'utente; se manca, il nome del campo tratteggiato in grigio. */
-export function Val({ x, y, value, empty, cls = '', anchor }: { x: number; y: number; value: string; empty: string; cls?: string; anchor?: 'start' | 'middle' | 'end' }) {
+export function Val({ x, y, value, empty, cls = '', anchor, max }: { x: number; y: number; value: string; empty: string; cls?: string; anchor?: 'start' | 'middle' | 'end'; max?: number }) {
   return (
-    <text x={x} y={y} text-anchor={anchor} class={value ? `pl-value ${cls}` : `pl-empty ${cls}`}>
+    <text x={x} y={y} text-anchor={anchor} data-max={max} class={value ? `pl-value ${cls}` : `pl-empty ${cls}`}>
       {value || empty}
     </text>
   )
 }
 
+const EDGE = 4
+
+/**
+ * Tiene ogni scritta dentro il suo spazio, misurandola sul testo reso (il font reale, non una stima):
+ * - una pillola (`rect.pill` seguito dal suo testo) si allarga quanto la scritta, fino al suo `data-max`;
+ * - una scritta con `data-max` non supera quella larghezza;
+ * - ogni altra scritta non esce dai bordi della tavola.
+ * Se una scritta non sta nello spazio, si stringe con textLength (lettere e spazi un po' più stretti).
+ */
+export function fitTexts(svg: SVGSVGElement) {
+  const width = svg.viewBox.baseVal.width
+  const toSvg = svg.getScreenCTM()?.inverse()
+  for (const el of svg.querySelectorAll('text')) {
+    el.removeAttribute('textLength')
+    el.removeAttribute('lengthAdjust')
+  }
+  for (const rect of svg.querySelectorAll<SVGRectElement>('rect.pill')) {
+    const text = rect.nextElementSibling as SVGTextElement | null
+    if (!text || text.tagName !== 'text') continue
+    const pad = Number(rect.dataset.pad ?? 11)
+    const cap = Number(rect.dataset.max ?? width - rect.x.baseVal.value - EDGE)
+    const len = text.getComputedTextLength()
+    rect.setAttribute('width', String(Math.min(len + pad * 2, cap)))
+    text.dataset.max = String(cap - pad * 2)
+  }
+  for (const text of svg.querySelectorAll<SVGTextElement>('text')) {
+    const len = text.getComputedTextLength()
+    if (!len) continue
+    let max = text.dataset.max ? Number(text.dataset.max) : Infinity
+    // Il bordo della tavola: quanto spazio c'è, in coordinate della tavola, dal punto d'ancoraggio.
+    const m = toSvg && text.getScreenCTM() ? toSvg.multiply(text.getScreenCTM()!) : null
+    if (m) {
+      const box = text.getBBox()
+      const left = m.e + box.x * m.a
+      const right = left + box.width * m.a
+      const anchor = getComputedStyle(text).textAnchor
+      const room =
+        anchor === 'middle'
+          ? 2 * Math.min((left + right) / 2 - EDGE, width - EDGE - (left + right) / 2)
+          : anchor === 'end'
+            ? right - EDGE
+            : width - EDGE - left
+      max = Math.min(max, room / (m.a || 1))
+    }
+    if (len > max + 0.5) {
+      // Un paio di unità di margine: il riquadro del glifo è un po' più largo del suo avanzamento.
+      text.setAttribute('textLength', String(Math.max(max - 2, 1)))
+      text.setAttribute('lengthAdjust', 'spacingAndGlyphs')
+    }
+  }
+}
+
 /** La tavola: titolo sopra, disegno sotto. Il titolo dice cosa mostra, il disegno lo mostra. */
 export function Plate({ title, height, label, children }: { title: string; height: number; label: string; children: ComponentChildren }) {
+  const svg = useRef<SVGSVGElement>(null)
+  // Dopo ogni aggiornamento, e quando i font sono pronti, le scritte si rimisurano.
+  useLayoutEffect(() => {
+    if (svg.current) fitTexts(svg.current)
+  })
+  useEffect(() => {
+    const el = svg.current
+    document.fonts?.ready.then(() => el && fitTexts(el))
+    const ro = new ResizeObserver(() => el && fitTexts(el))
+    if (el) ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
   return (
     <figure class="plate">
       <h3 class="plate-title">{title}</h3>
-      <svg class="plate-svg" viewBox={`0 0 400 ${height}`} role="img" aria-label={label}>
+      <svg ref={svg} class="plate-svg" viewBox={`0 0 400 ${height}`} role="img" aria-label={label}>
         {children}
       </svg>
     </figure>
