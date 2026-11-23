@@ -182,9 +182,6 @@ function Route() {
         <button type="button" class="btn-secondary btn-small" onClick={play} disabled={playing}>
           {t('route.play')}
         </button>
-        <a class="small" href="https://ref.gs1.org/sme-guidance/online-technologies/" target="_blank" rel="noopener noreferrer">
-          {t('why.source')}
-        </a>
       </div>
     </div>
   )
